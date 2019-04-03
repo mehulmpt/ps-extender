@@ -1,19 +1,19 @@
 function checks() {
-    if(location.hostname !== 'psd.bits-pilani.ac.in') {
+    if (location.hostname !== 'psd.bits-pilani.ac.in') {
         alert("Only works on http://psd.bits-pilani.ac.in")
         return false
     }
 
-    if(!location.pathname.includes('StudentStationPreference.aspx')) {
+    if (!location.pathname.includes('StudentStationPreference.aspx')) {
         alert('You need to be on Fill Station Prefrence page')
         return false
     }
 
-    if(window.__PSZYSET__ === true) {
+    if (window.__PSZYSET__ === true) {
         alert('Already ran here once. Please refresh')
         return false
     }
-    
+
     return true
 }
 
@@ -22,72 +22,71 @@ function $(selector) {
     return elems.length === 1 ? elems[0] : [...elems]
 }
 
-const styles = `
-div#__PSZY_CONTROLS__ {
-    display: flex;
-    margin-top: 10px;
-    justify-content: center;
-    align-items: center;
-}
-div#__PSZY_CONTROLS__>div {
-    margin-left: 10px;
-    margin-right: 10px;
-    font-size: 19px;
-    background: #418aca;
-    color: white;
-    padding: 10px;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    border-radius: 50%;
-    align-items: center;
-    cursor: pointer;
-}
+if (checks()) {
 
-ul#sortable_nav>li:first-child div#__PSZY_CONTROLS__ #__PSZY_MOVEUP__ {
-    display: none;
-}
+    const styles = `
+        div#__PSZY_CONTROLS__ {
+            display: flex;
+            margin-top: 10px;
+            justify-content: center;
+            align-items: center;
+        }
+        div#__PSZY_CONTROLS__>div {
+            margin-left: 10px;
+            margin-right: 10px;
+            font-size: 19px;
+            background: #418aca;
+            color: white;
+            padding: 10px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            border-radius: 50%;
+            align-items: center;
+            cursor: pointer;
+        }
 
-ul#sortable_nav>li:first-child div#__PSZY_CONTROLS__ #__PSZY_TOP__ {
-    display: none;
-}
+        ul#sortable_nav>li:first-child div#__PSZY_CONTROLS__ #__PSZY_MOVEUP__ {
+            display: none;
+        }
 
-ul#sortable_nav>li:last-child div#__PSZY_CONTROLS__ #__PSZY_MOVEDOWN__ {
-    display: none;
-}
+        ul#sortable_nav>li:first-child div#__PSZY_CONTROLS__ #__PSZY_TOP__ {
+            display: none;
+        }
 
-ul#sortable_nav>li:last-child div#__PSZY_CONTROLS__ #__PSZY_BOTTOM__ {
-    display: none;
-}
+        ul#sortable_nav>li:last-child div#__PSZY_CONTROLS__ #__PSZY_MOVEDOWN__ {
+            display: none;
+        }
 
-div#__PSZY_CONTROLS__ div#__PSZY_SWAP__ {
-    border-radius: 10px;
-    width: auto;
-}
+        ul#sortable_nav>li:last-child div#__PSZY_CONTROLS__ #__PSZY_BOTTOM__ {
+            display: none;
+        }
 
-@keyframes bg {
-    0% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.5;
-    }
-    100% {
-        opacity: 1;
-    }
-}
+        div#__PSZY_CONTROLS__ div#__PSZY_SWAP__ {
+            border-radius: 10px;
+            width: auto;
+        }
 
-.glow {
-    animation: bg 0.4s linear;
-}
-`
+        @keyframes bg {
+            0% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
 
-const styleTag = document.createElement('style')
-styleTag.innerHTML = styles
+        .glow {
+            animation: bg 0.4s linear;
+        }
+    `
 
-if(checks()) {
-    
+    const styleTag = document.createElement('style')
+    styleTag.innerHTML = styles
 
     window.__PSZYSET__ = true
 
@@ -116,7 +115,7 @@ if(checks()) {
     document.addEventListener('click', checkPSZYClicks, false)
 
     function checkPSZYClicks(e) {
-        switch(e.target.id) {
+        switch (e.target.id) {
             case '__PSZY_MOVEUP__': moveup(e.target.parentNode.parentNode); break;
             case '__PSZY_MOVEDOWN__': movedown(e.target.parentNode.parentNode); break;
             case '__PSZY_TOP__': movetotop(e.target.parentNode.parentNode); break;
@@ -130,24 +129,24 @@ if(checks()) {
         const list = $('#sortable_nav li')
 
         debugger
-        if(isNaN(nextNodeNum) || nextNodeNum < 1) {
+        if (isNaN(nextNodeNum) || nextNodeNum < 1) {
             return alert('Enter a valid number')
         }
 
-        if(list.length < nextNodeNum) {
+        if (list.length < nextNodeNum) {
             return alert('Not enough stations. Try a smaller number')
         }
-        
+
 
         const otherNode = list[nextNodeNum - 1]
 
         debugger
-        
-        if(otherNode === node) {
+
+        if (otherNode === node) {
             return alert('Same station')
         }
 
-        if(otherNode.nextSibling !== node) {
+        if (otherNode.nextSibling !== node) {
             const nextNode = otherNode.nextSibling
             otherNode.parentNode.insertBefore(otherNode, node)
             node.parentNode.insertBefore(node, nextNode)
@@ -158,7 +157,7 @@ if(checks()) {
             otherNode.parentNode.insertBefore(otherNode, nextNode)
             glow(otherNode, node)
         }
-        
+
         correctRanks()
     }
 
