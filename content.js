@@ -1,30 +1,29 @@
 function checks() {
-    if (location.hostname !== 'psd.bits-pilani.ac.in') {
-        alert("Only works on http://psd.bits-pilani.ac.in")
-        return false
-    }
+	if (location.hostname !== 'psd.bits-pilani.ac.in') {
+		alert('Only works on http://psd.bits-pilani.ac.in')
+		return false
+	}
 
-    if (!location.pathname.includes('StudentStationPreference.aspx')) {
-        alert('You need to be on Fill Station Prefrence page')
-        return false
-    }
+	if (!location.pathname.includes('StudentStationPreference.aspx')) {
+		alert('You need to be on Fill Station Prefrence page')
+		return false
+	}
 
-    if (window.__PSZYSET__ === true) {
-        alert('Already ran here once. Please refresh')
-        return false
-    }
+	if (window.__PSZYSET__ === true) {
+		alert('Already ran here once. Please refresh')
+		return false
+	}
 
-    return true
+	return true
 }
 
 function $(selector) {
-    const elems = document.querySelectorAll(selector)
-    return elems.length === 1 ? elems[0] : [...elems]
+	const elems = document.querySelectorAll(selector)
+	return elems.length === 1 ? elems[0] : [...elems]
 }
 
 if (checks()) {
-
-    const styles = `
+	const styles = `
         div#__PSZY_CONTROLS__ {
             display: flex;
             margin-top: 10px;
@@ -85,22 +84,21 @@ if (checks()) {
         }
     `
 
-    const styleTag = document.createElement('style')
-    styleTag.innerHTML = styles
+	const styleTag = document.createElement('style')
+	styleTag.innerHTML = styles
 
-    window.__PSZYSET__ = true
+	window.__PSZYSET__ = true
 
-    // disable default sorting library
-    const script = document.createElement('script')
-    script.innerHTML = `$('#sortable_nav').sortable('destroy'); $('#sortable_nav').enableSelection();`
-    document.head.appendChild(script)
+	// disable default sorting library
+	const script = document.createElement('script')
+	script.innerHTML = `$('#sortable_nav').sortable('destroy'); $('#sortable_nav').enableSelection();`
+	document.head.appendChild(script)
 
-    // add styles
-    document.head.appendChild(styleTag)
+	// add styles
+	document.head.appendChild(styleTag)
 
-
-    // add controls
-    const controls = `
+	// add controls
+	const controls = `
     <div id="__PSZY_CONTROLS__">
         <div id="__PSZY_MOVEUP__" title="Move 1 up">&uarr;</div>
         <div id="__PSZY_MOVEDOWN__" title="Move 1 down">&darr;</div>
@@ -109,97 +107,106 @@ if (checks()) {
         <div id="__PSZY_SWAP__" title="Swap">Swap</div>
     </div>`
 
-    const lis = $('#sortable_nav > li')
-    lis.forEach(li => li.innerHTML += controls)
+	const lis = $('#sortable_nav > li')
+	lis.forEach((li) => (li.innerHTML += controls))
 
-    document.addEventListener('click', checkPSZYClicks, false)
+	document.addEventListener('click', checkPSZYClicks, false)
 
-    function checkPSZYClicks(e) {
-        switch (e.target.id) {
-            case '__PSZY_MOVEUP__': moveup(e.target.parentNode.parentNode); break;
-            case '__PSZY_MOVEDOWN__': movedown(e.target.parentNode.parentNode); break;
-            case '__PSZY_TOP__': movetotop(e.target.parentNode.parentNode); break;
-            case '__PSZY_BOTTOM__': movetobottom(e.target.parentNode.parentNode); break;
-            case '__PSZY_SWAP__': moveswap(e.target.parentNode.parentNode); break;
-        }
-    }
+	function checkPSZYClicks(e) {
+		switch (e.target.id) {
+			case '__PSZY_MOVEUP__':
+				moveup(e.target.parentNode.parentNode)
+				break
+			case '__PSZY_MOVEDOWN__':
+				movedown(e.target.parentNode.parentNode)
+				break
+			case '__PSZY_TOP__':
+				movetotop(e.target.parentNode.parentNode)
+				break
+			case '__PSZY_BOTTOM__':
+				movetobottom(e.target.parentNode.parentNode)
+				break
+			case '__PSZY_SWAP__':
+				moveswap(e.target.parentNode.parentNode)
+				break
+		}
+	}
 
-    function moveswap(node) {
-        const nextNodeNum = parseInt(prompt('Enter station# to swap with'), 10)
-        const list = $('#sortable_nav li')
+	function moveswap(node) {
+		const nextNodeNum = parseInt(prompt('Enter station# to swap with'), 10)
+		const list = $('#sortable_nav li')
 
-        debugger
-        if (isNaN(nextNodeNum) || nextNodeNum < 1) {
-            return alert('Enter a valid number')
-        }
+		debugger
+		if (isNaN(nextNodeNum) || nextNodeNum < 1) {
+			return alert('Enter a valid number')
+		}
 
-        if (list.length < nextNodeNum) {
-            return alert('Not enough stations. Try a smaller number')
-        }
+		if (list.length < nextNodeNum) {
+			return alert('Not enough stations. Try a smaller number')
+		}
 
+		const otherNode = list[nextNodeNum - 1]
 
-        const otherNode = list[nextNodeNum - 1]
+		debugger
 
-        debugger
+		if (otherNode === node) {
+			return alert('Same station')
+		}
 
-        if (otherNode === node) {
-            return alert('Same station')
-        }
+		if (otherNode.nextSibling !== node) {
+			const nextNode = otherNode.nextSibling
+			otherNode.parentNode.insertBefore(otherNode, node)
+			node.parentNode.insertBefore(node, nextNode)
+			glow(node, otherNode)
+		} else {
+			const nextNode = node.nextSibling
+			node.parentNode.insertBefore(node, otherNode)
+			otherNode.parentNode.insertBefore(otherNode, nextNode)
+			glow(otherNode, node)
+		}
 
-        if (otherNode.nextSibling !== node) {
-            const nextNode = otherNode.nextSibling
-            otherNode.parentNode.insertBefore(otherNode, node)
-            node.parentNode.insertBefore(node, nextNode)
-            glow(node, otherNode)
-        } else {
-            const nextNode = node.nextSibling
-            node.parentNode.insertBefore(node, otherNode)
-            otherNode.parentNode.insertBefore(otherNode, nextNode)
-            glow(otherNode, node)
-        }
+		correctRanks()
+	}
 
-        correctRanks()
-    }
+	function moveup(node) {
+		const prevNode = node.previousSibling
+		glow(prevNode, node)
+		node.parentNode.insertBefore(node, prevNode)
+		correctRanks()
+	}
 
-    function moveup(node) {
-        const prevNode = node.previousSibling
-        glow(prevNode, node)
-        node.parentNode.insertBefore(node, prevNode)
-        correctRanks()
-    }
+	function movedown(node) {
+		const nextNode = node.nextSibling
+		glow(nextNode, node)
+		node.parentNode.insertBefore(nextNode, node)
+		correctRanks()
+	}
 
-    function movedown(node) {
-        const nextNode = node.nextSibling
-        glow(nextNode, node)
-        node.parentNode.insertBefore(nextNode, node)
-        correctRanks()
-    }
+	function movetotop(node) {
+		const prevNode = node.parentNode.querySelector('li:first-child')
+		glow(node)
+		node.parentNode.insertBefore(node, prevNode)
+		correctRanks()
+	}
 
-    function movetotop(node) {
-        const prevNode = node.parentNode.querySelector('li:first-child')
-        glow(node)
-        node.parentNode.insertBefore(node, prevNode)
-        correctRanks()
-    }
+	function movetobottom(node) {
+		glow(node)
+		node.parentNode.appendChild(node)
+		correctRanks()
+	}
 
-    function movetobottom(node) {
-        glow(node)
-        node.parentNode.appendChild(node)
-        correctRanks()
-    }
+	function glow(...nodes) {
+		nodes.forEach((node) => {
+			node.classList.add('glow')
+			setTimeout(() => {
+				node.classList.remove('glow')
+			}, 400)
+		})
+	}
 
-    function glow(...nodes) {
-        nodes.forEach(node => {
-            node.classList.add('glow')
-            setTimeout(() => {
-                node.classList.remove('glow')
-            }, 400)
-        })
-    }
-
-    function correctRanks() {
-        $('#sortable_nav > li').forEach((li, index) => {
-            li.querySelector('.sortable-number span').innerText = index + 1
-        })
-    }
+	function correctRanks() {
+		$('#sortable_nav > li').forEach((li, index) => {
+			li.querySelector('.sortable-number span').innerText = index + 1
+		})
+	}
 }
