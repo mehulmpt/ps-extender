@@ -10,7 +10,7 @@ function checks() {
     }
 
     if (window.__PSZYSET__ === true) {
-        alert('Already ran here once. Please refresh')
+        alert('Already ran here once. Please refresh the page.')
         return false
     }
 
@@ -34,12 +34,12 @@ if (checks()) {
         div#__PSZY_CONTROLS__>div {
             margin-left: 10px;
             margin-right: 10px;
-            font-size: 19px;
+            font-size: 12px;
             background: #418aca;
             color: white;
             padding: 10px;
-            width: 40px;
-            height: 40px;
+            width: fit-content;
+            height: fit-content;
             display: flex;
             justify-content: center;
             border-radius: 50%;
@@ -64,6 +64,11 @@ if (checks()) {
         }
 
         div#__PSZY_CONTROLS__ div#__PSZY_SWAP__ {
+            border-radius: 10px;
+            width: auto;
+        }
+
+        div#__PSZY_CONTROLS__ div.__PSZY_BUTTON__ {
             border-radius: 10px;
             width: auto;
         }
@@ -102,11 +107,11 @@ if (checks()) {
     // add controls
     const controls = `
     <div id="__PSZY_CONTROLS__">
-        <div id="__PSZY_MOVEUP__" title="Move 1 up">&uarr;</div>
-        <div id="__PSZY_MOVEDOWN__" title="Move 1 down">&darr;</div>
-        <div id="__PSZY_TOP__" title="Send to top">&uarr;&uarr;</div>
-        <div id="__PSZY_BOTTOM__" title="Send to bottom">&darr;&darr;</div>
-        <div id="__PSZY_SWAP__" title="Swap">Swap</div>
+        <div class="__PSZY_BUTTON__" id="__PSZY_MOVEUP__" title="Move 1 up">Swap with above</div>
+        <div class="__PSZY_BUTTON__" id="__PSZY_MOVEDOWN__" title="Move 1 down">Swap with below</div>
+        <div class="__PSZY_BUTTON__" id="__PSZY_TOP__" title="Send to top">Send to top</div>
+        <div class="__PSZY_BUTTON__" id="__PSZY_BOTTOM__" title="Send to bottom">Send to bottom</div>
+        <div class="__PSZY_BUTTON__" id="__PSZY_SWAP__" title="Swap">Swap using Station ID</div>
     </div>`
 
     const lis = $('#sortable_nav > li')
