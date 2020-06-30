@@ -214,11 +214,11 @@ if (checks()) {
 			for(var i=begNodeNum-1;i<=endNodeNum-1;i++){
 				noOfMoveUps=begNodeNum-refNodeNum+1
 				while(noOfMoveUps!==0){
-					moveup(li[i])
+					moveup(list[i])
 					noOfMoveUps--
 				}
 			}
-			
+
 		}
 		// else
 		else{
