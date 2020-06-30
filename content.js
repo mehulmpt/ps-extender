@@ -192,7 +192,7 @@ if (checks()) {
 
 		debugger
 		const begNodeNum = parseInt(node.querySelector('.sortable-number span').innerText)
-		const refNodeNum = parseInt(prompt('Enter station# above which to move the selected range'), 10)
+		const refNodeNum = parseInt(prompt('Enter station# above(or below) which to move the selected range'), 10)
 		debugger
 		if (isNaN(refNodeNum) || refNodeNum < 1) {
 			return alert('Enter a valid number')
