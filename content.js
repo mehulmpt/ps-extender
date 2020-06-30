@@ -66,6 +66,10 @@ if (checks()) {
             border-radius: 10px;
             width: auto;
         }
+        div#__PSZY_CONTROLS__ div#__PSZY_MOVERANGE__ {
+            border-radius: 10px;
+            width: auto;
+        }
 
         @keyframes bg {
             0% {
@@ -105,6 +109,7 @@ if (checks()) {
         <div id="__PSZY_TOP__" title="Send to top">&uarr;&uarr;</div>
         <div id="__PSZY_BOTTOM__" title="Send to bottom">&darr;&darr;</div>
         <div id="__PSZY_SWAP__" title="Swap">Swap</div>
+        <div id="__PSZY_SWAP__" title="Move range above a given selection">MOVERANGE</div>
     </div>`
 
 	const lis = $('#sortable_nav > li')
@@ -128,6 +133,9 @@ if (checks()) {
 				break
 			case '__PSZY_SWAP__':
 				moveswap(e.target.parentNode.parentNode)
+				break
+			case '__PSZY_MOVERANGE__':
+				moverange(e.target.parentNode.parentNode)
 				break
 		}
 	}
@@ -166,6 +174,42 @@ if (checks()) {
 		}
 
 		correctRanks()
+	}
+	function moverange(node){
+		const endNodeNum = parseInt(prompt('Enter station# till which range to be made'), 10)
+		const list = $('#sortable_nav li')
+
+		debugger
+		if (isNaN(endNodeNum) || endNodeNum < 1) {
+			return alert('Enter a valid number')
+		}
+
+		if (list.length < endNodeNum) {
+			return alert('Not enough stations. Try a smaller number')
+		}
+
+		const endNode = list[endNodeNum - 1]
+
+		debugger
+
+		const refNodeNum = parseInt(prompt('Enter station# above which to move the selected range'), 10)
+		debugger
+		if (isNaN(refNodeNum) || refNodeNum < 1) {
+			return alert('Enter a valid number')
+		}
+
+		if (list.length < refNodeNum) {
+			return alert('Not enough stations. Try a smaller number')
+		}
+		if (node.index+1<= refNodeNum && refNodeNum<=endNodeNum) {
+			return alert('Cannot Move selected range on given PS staion. Try again with other value outside of selection.' )
+		}
+
+		const refNode = list[refNodeNum - 1]
+
+		debugger
+		
+
 	}
 
 	function moveup(node) {
