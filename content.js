@@ -191,7 +191,7 @@ if (checks()) {
 		const endNode = list[endNodeNum - 1]
 
 		debugger
-		const begNodeNum = parseInt(node.querySelector('.sortable-number span').innerText)+1
+		const begNodeNum = parseInt(node.querySelector('.sortable-number span').innerText)
 		const refNodeNum = parseInt(prompt('Enter station# above which to move the selected range'), 10)
 		debugger
 		if (isNaN(refNodeNum) || refNodeNum < 1) {
@@ -209,10 +209,10 @@ if (checks()) {
 
 		debugger
 		// if reference node above selection
-		if(refNodeNum>begNodeNum){
+		if(refNodeNum<begNodeNum){
 			//for each node in range move up begNodeNum-refNodeNum+1
 			for(var i=begNodeNum-1;i<=endNodeNum-1;i++){
-				noOfMoveUps=begNodeNum-refNodeNum+1
+				noOfMoveUps=begNodeNum-refNodeNum
 				while(noOfMoveUps!==0){
 					moveup(list[i])
 					noOfMoveUps--
@@ -222,7 +222,14 @@ if (checks()) {
 		}
 		// else
 		else{
-			// for each node in selected range move down 
+			// for each node in selected range move down
+			for(var j=endNodeNum-1;j>=begNodeNum-1;j--){
+				noOfMoveDowns=refNodeNum-endNodeNum
+				while(noOfMoveDowns!==0){
+					movedown(list[j])
+					noOfMoveDowns--
+				}
+			} 
 		}
 
 	}
