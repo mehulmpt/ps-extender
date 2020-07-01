@@ -19,7 +19,7 @@
 
 ## 🎓 Usage
 
-The easiest way to use this is to install is using webstore [here](http://bit.ly/ps-extender). For some reason, if it doesn't work, then follow the steps:
+The easiest way to use this is to install is using webstore [here](http://bit.ly/ps-extender). For some reason, if it doesn't work, then follow the <strong>offline install</strong> steps:
 
 1. Click on clone--->download zip
 2. Type chrome://extensions/ in your URL
