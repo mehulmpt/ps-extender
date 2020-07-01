@@ -33,12 +33,12 @@ if (checks()) {
         div#__PSZY_CONTROLS__>div {
             margin-left: 10px;
             margin-right: 10px;
-            font-size: 19px;
+            font-size: 12px;
             background: #418aca;
             color: white;
-            padding: 10px;
-            width: 40px;
-            height: 40px;
+            padding: 8px;
+            width: 30px;
+            height: 30px;
             display: flex;
             justify-content: center;
             border-radius: 50%;
@@ -67,6 +67,10 @@ if (checks()) {
             width: auto;
         }
         div#__PSZY_CONTROLS__ div#__PSZY_MOVERANGE__ {
+            border-radius: 10px;
+            width: auto;
+        }
+        div#__PSZY_CONTROLS__ div#__PSZY_PBANK__ {
             border-radius: 10px;
             width: auto;
         }
@@ -110,12 +114,16 @@ if (checks()) {
         <div id="__PSZY_BOTTOM__" title="Send to bottom">&darr;&darr;</div>
         <div id="__PSZY_SWAP__" title="Swap">Swap</div>
         <div id="__PSZY_MOVERANGE__" title="Move range above a given selection">MOVERANGE</div>
+        <div id="__PSZY_PBANK__" title="open problem bank">Open Problem Bank (Toggle off for speed)</div>
     </div>`
 
 	const lis = $('#sortable_nav > li')
-	lis.forEach((li) => (li.innerHTML += controls))
 
+	lis.forEach((li) => (li.innerHTML += controls))
+	// document.body.innerHTML=iFrameForProblemBank+document.body.innerHTML
 	document.addEventListener('click', checkPSZYClicks, false)
+
+	var temp=0
 
 	function checkPSZYClicks(e) {
 		switch (e.target.id) {
@@ -137,7 +145,25 @@ if (checks()) {
 			case '__PSZY_MOVERANGE__':
 				moverange(e.target.parentNode.parentNode)
 				break
+			case '__PSZY_PBANK__':
+				if(temp===0){
+					iframer(e.target.parentNode.parentNode)
+					temp=1
+				}else{
+					iframeremover(e.target.parentNode.parentNode)
+					temp=0
+				}
+				break
 		}
+	}
+	function iframer(node){
+		const iFrameForProblemBank=`<iframe id="pbank" name="pbank" src="http://psd.bits-pilani.ac.in/Student/ViewActiveStationProblemBankData.aspx" style="height:400px;margin-top:10px; width:100%;" frameborder="1"></iframe>`
+		node.innerHTML+=iFrameForProblemBank
+
+	}
+	function iframeremover(node){
+		var x = node.innerHTML.indexOf("<iframe");
+   		node.innerHTML = node.innerHTML.slice(0,x);
 	}
 
 	function moveswap(node) {
