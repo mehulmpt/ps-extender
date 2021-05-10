@@ -23,10 +23,11 @@ The easiest way to use this is to install is using webstore [here](http://bit.ly
 
 1. Click on clone--->download zip
 2. Type chrome://extensions/ in your URL
-3. Click on "Load unpacked"
-4. Locate the folder you just extracted the zip file into.
-5. Visit/Refresh your PSD page and click on the extension icon in your toolbar.
-6. You should now see an interface with the controls.
+3. Enable Developer Mode (top-right)
+4. Click on "Load unpacked"
+5. Locate the folder you just extracted the zip file into.
+6. Visit/Refresh your PSD page and click on the extension icon in your toolbar.
+7. You should now see an interface with the controls.
 
 ## 🚀 Contributing
 
