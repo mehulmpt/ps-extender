@@ -27,7 +27,7 @@ if (checks()) {
         div#__PSZY_CONTROLS__ {
             display: flex;
             margin-top: 10px;
-            justify-content: center;
+            justify-content: flex-end;
             align-items: center;
         }
         div#__PSZY_CONTROLS__>div {
@@ -62,15 +62,15 @@ if (checks()) {
             display: none;
         }
 
+		ul#sortable_nav>li:not(:hover) div#__PSZY_CONTROLS__{
+			display: none;
+		}
+
         div#__PSZY_CONTROLS__ div#__PSZY_SWAP__ {
             border-radius: 10px;
             width: auto;
         }
         div#__PSZY_CONTROLS__ div#__PSZY_MOVERANGE__ {
-            border-radius: 10px;
-            width: auto;
-        }
-        div#__PSZY_CONTROLS__ div#__PSZY_PBANK__ {
             border-radius: 10px;
             width: auto;
         }
@@ -114,7 +114,7 @@ if (checks()) {
         <div id="__PSZY_BOTTOM__" title="Send to bottom">&darr;&darr;</div>
         <div id="__PSZY_SWAP__" title="Swap">Swap</div>
         <div id="__PSZY_MOVERANGE__" title="Move range above a given selection">MOVERANGE</div>
-        <div id="__PSZY_PBANK__" title="open problem bank">Open Problem Bank (Toggle off for speed)</div>
+        <div id="__PSZY_PBANK__" title="open problem bank">i</div>
     </div>`
 
 	const lis = $('#sortable_nav > li')
@@ -146,24 +146,27 @@ if (checks()) {
 				moverange(e.target.parentNode.parentNode)
 				break
 			case '__PSZY_PBANK__':
-				if(temp===0){
-					iframer(e.target.parentNode.parentNode)
-					temp=1
-				}else{
-					iframeremover(e.target.parentNode.parentNode)
-					temp=0
-				}
+				let stid = e.target.parentNode.parentNode.querySelector('span').attributes.spn.value
+				fetch("http://psd.bits-pilani.ac.in/Student/ViewActiveStationProblemBankData.aspx/getPBPOPUP", {
+					"headers": {
+						"accept": "application/json, text/javascript, */*; q=0.01",
+						"accept-language": "en-US,en;q=0.9",
+						"cache-control": "no-cache",
+						"content-type": "application/json; charset=UTF-8",
+						"pragma": "no-cache",
+						"x-requested-with": "XMLHttpRequest"
+					},
+					"referrer": "http://psd.bits-pilani.ac.in/Student/ViewActiveStationProblemBankData.aspx",
+					"referrerPolicy": "strict-origin-when-cross-origin",
+					"body": `{StationId: \"${stid}\" }`,
+					"method": "POST",
+					"mode": "cors",
+					"credentials": "include"
+				}).then(response => response.json())
+				.then(data => JSON.parse(data.d)[0])
+				.then(data => window.open(`StationproblemBankDetails.aspx?CompanyId=${data.CompanyId}&StationId=${data.StationId}&BatchIdFor=${data.BatchIdFor}&PSTypeFor=${data.PSTypeFor}`, "_blank"))
 				break
 		}
-	}
-	function iframer(node){
-		const iFrameForProblemBank=`<iframe id="pbank" name="pbank" src="http://psd.bits-pilani.ac.in/Student/ViewActiveStationProblemBankData.aspx" style="height:400px;margin-top:10px; width:100%;" frameborder="1"></iframe>`
-		node.innerHTML+=iFrameForProblemBank
-
-	}
-	function iframeremover(node){
-		var x = node.innerHTML.indexOf("<iframe");
-   		node.innerHTML = node.innerHTML.slice(0,x);
 	}
 
 	function moveswap(node) {
