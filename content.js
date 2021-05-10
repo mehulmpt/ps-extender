@@ -70,6 +70,11 @@ if (checks()) {
             border-radius: 10px;
             width: auto;
         }
+        div#__PSZY_CONTROLS__ div#__PSZY_MOVETO__ {
+            border-radius: 10px;
+            width: auto;
+        }
+
         div#__PSZY_CONTROLS__ div#__PSZY_MOVERANGE__ {
             border-radius: 10px;
             width: auto;
@@ -113,6 +118,7 @@ if (checks()) {
         <div id="__PSZY_TOP__" title="Send to top">&uarr;&uarr;</div>
         <div id="__PSZY_BOTTOM__" title="Send to bottom">&darr;&darr;</div>
         <div id="__PSZY_SWAP__" title="Swap">Swap</div>
+        <div id="__PSZY_MOVETO__" title="Move to">Move to</div>
         <div id="__PSZY_MOVERANGE__" title="Move range above a given selection">MOVERANGE</div>
         <div id="__PSZY_PBANK__" title="open problem bank">i</div>
     </div>`
@@ -141,6 +147,9 @@ if (checks()) {
 				break
 			case '__PSZY_SWAP__':
 				moveswap(e.target.parentNode.parentNode)
+				break
+			case '__PSZY_MOVETO__':
+				moveto(e.target.parentNode.parentNode)
 				break
 			case '__PSZY_MOVERANGE__':
 				moverange(e.target.parentNode.parentNode)
@@ -290,6 +299,29 @@ if (checks()) {
 		correctRanks()
 	}
 
+	function moveto(node) {
+		const newNodePos = parseInt(prompt('Enter preference#'), 10)
+		const list = $('#sortable_nav li')
+		const currentNodePos = list.indexOf(node)
+
+		if (isNaN(newNodePos) || newNodePos < 1) {
+			return alert('Enter a valid number')
+		}
+		if (list.length < newNodePos) {
+			return alert('Not enough stations. Try a smaller number')
+		}
+
+		const newNode = currentNodePos>newNodePos ? list[newNodePos - 1] : list[newNodePos]
+
+		if (newNode === node) {
+			return alert('Same station')
+		}
+
+		glow(node)
+		node.parentNode.insertBefore(node, newNode)
+		correctRanks()
+	}
+
 	function glow(...nodes) {
 		nodes.forEach((node) => {
 			node.classList.add('glow')
@@ -302,6 +334,7 @@ if (checks()) {
 	function correctRanks() {
 		$('#sortable_nav > li').forEach((li, index) => {
 			li.querySelector('.sortable-number span').innerText = index + 1
+			li.querySelector('span').attributes.cls.value = index + 1
 		})
 	}
 }
