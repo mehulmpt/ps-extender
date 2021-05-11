@@ -11,10 +11,9 @@
 
 </div>
 
-<p>With this extension, you can:</p>
+<p>This extension:</p>
 
 👉 Adds controls for swapping PS station
-
 👉 Removes the default jQuery implementation on the website.
 
 ## 🎓 Usage
