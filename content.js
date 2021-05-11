@@ -123,6 +123,7 @@ if (checks()) {
         }
 
         div#__PSZY_CONTROLS__ svg {
+			pointer-events: none;
             width: 15px;
             height: 15px;
         }
@@ -166,7 +167,7 @@ if (checks()) {
         <div id="__PSZY_TOP__" title="Send to top">${PSZYIcons.sendToTop}</div>
         <div id="__PSZY_BOTTOM__" title="Send to bottom">${PSZYIcons.sendToBottom}</div>
         <div id="__PSZY_SWAP__" title="Swap">Swap</div>
-        <div id="__PSZY_MOVETO__" title="Move to">Move to</div>
+        <div id="__PSZY_MOVETO__" title="Move to">MoveTo</div>
         <div id="__PSZY_MOVERANGE__" title="Move range above a given selection">moveRange</div>
         <div id="__PSZY_PBANK__" title="open problem bank">${PSZYIcons.info}</div>
     </div>`
@@ -257,6 +258,7 @@ if (checks()) {
 
 		correctRanks()
 	}
+
 	function moverange(node){
 		const endNodeNum = parseInt(prompt('Enter station# till which range to be made'), 10)
 		const list = $('#sortable_nav li')
@@ -320,6 +322,10 @@ if (checks()) {
 		const prevNode = node.previousSibling
 		glow(prevNode, node)
 		node.parentNode.insertBefore(node, prevNode)
+		window.scrollBy({
+			top: -1*node.offsetHeight,
+			behavior: 'smooth'
+		})
 		correctRanks()
 	}
 
@@ -327,6 +333,10 @@ if (checks()) {
 		const nextNode = node.nextSibling
 		glow(nextNode, node)
 		node.parentNode.insertBefore(nextNode, node)
+		window.scrollBy({
+			top: node.offsetHeight,
+			behavior: 'smooth'
+		})
 		correctRanks()
 	}
 
@@ -355,11 +365,7 @@ if (checks()) {
 			return alert('Not enough stations. Try a smaller number')
 		}
 
-		const newNode = currentNodePos>newNodePos ? list[newNodePos - 1] : list[newNodePos]
-
-		if (newNode === node) {
-			return alert('Same station')
-		}
+		const newNode = currentNodePos>=newNodePos ? list[newNodePos - 1] : list[newNodePos]
 
 		glow(node)
 		node.parentNode.insertBefore(node, newNode)
