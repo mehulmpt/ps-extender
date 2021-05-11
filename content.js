@@ -204,18 +204,14 @@ if (checks()) {
 				break
 			case '__PSZY_PBANK__':
 				let stid = e.target.parentNode.parentNode.querySelector('.spanclass.uiicon').attributes.spn.value
+				let fetchBody = {StationId: stid}
 				fetch("http://psd.bits-pilani.ac.in/Student/ViewActiveStationProblemBankData.aspx/getPBPOPUP", {
 					"headers": {
-						"accept": "application/json, text/javascript, */*; q=0.01",
-						"accept-language": "en-US,en;q=0.9",
-						"cache-control": "no-cache",
 						"content-type": "application/json; charset=UTF-8",
-						"pragma": "no-cache",
-						"x-requested-with": "XMLHttpRequest"
 					},
 					"referrer": "http://psd.bits-pilani.ac.in/Student/ViewActiveStationProblemBankData.aspx",
 					"referrerPolicy": "strict-origin-when-cross-origin",
-					"body": `{StationId: \"${stid}\" }`,
+					"body": JSON.stringify(fetchBody),
 					"method": "POST",
 					"mode": "cors",
 					"credentials": "include"
