@@ -1,0 +1,20 @@
+name: Zip and deploy to webstore
+on:
+    push:
+        branches:
+            - 'master'
+jobs:
+    trigger_vercel_build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: 🚨 Zipping
+              run: cd src && zip -r build.zip *
+            - name: ✅ Deploying to webstore
+            - uses: trmcnvn/chrome-addon@v2
+              with:
+                  extension: bbaegmboolkgheghdaoahaabjnkofmdm
+                  zip: src/build.zip
+                  client-id: ${{ secrets.CLIENT_ID }}
+                  client-secret: ${{ secrets.CLIENT_SECRET }}
+                  refresh-token: ${{ secrets.REFRESH_TOKEN }}
