@@ -19,12 +19,12 @@
 
 ## 🎓 Usage
 
-The easiest way to use this is to install is using webstore [here](http://bit.ly/ps-extender). For some reason, if it doesn't work, then follow the <strong>offline install</strong> steps:
+The easiest way to use this is to install is using webstore [here](http://bit.ly/ps-extender). For some reason, if you want to set it up manually:
 
-1. Click on clone--->download zip
+1. Click on clone -> download zip
 2. Type chrome://extensions/ in your URL
 3. Click on "Load unpacked"
-4. Locate the folder you just extracted the zip file into.
+4. Locate the "src" folder of this repository.
 5. Visit/Refresh your PSD page and click on the extension icon in your toolbar.
 6. You should now see an interface with the controls.
 
