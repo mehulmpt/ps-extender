@@ -8,7 +8,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
-              name: 🚨 Zipping
+            - name: 🚨 Zipping
               run: cd src && zip -r build.zip *
 
             - uses: trmcnvn/chrome-addon@v2
