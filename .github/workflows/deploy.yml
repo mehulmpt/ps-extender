@@ -4,14 +4,15 @@ on:
         branches:
             - 'master'
 jobs:
-    trigger_vercel_build:
+    zip_and_deploy:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
             - name: 🚨 Zipping
               run: cd src && zip -r build.zip *
-            - name: ✅ Deploying to webstore
+
             - uses: trmcnvn/chrome-addon@v2
+            - name: ✅ Deploying to webstore
               with:
                   extension: bbaegmboolkgheghdaoahaabjnkofmdm
                   zip: src/build.zip
