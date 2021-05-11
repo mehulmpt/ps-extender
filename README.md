@@ -1,6 +1,6 @@
 <div align="center">
     <a href="http://psd.bits-pilani.ac.in/">
-        <img src="./icon.png" alt="BITS Pilani" width="120" height="120" />
+        <img src="./src/icon.png" alt="BITS Pilani" width="120" height="120" />
     </a>
     <br /><br />
     <h1><code>PSD Extender</code></h1>
@@ -11,17 +11,16 @@
 
 </div>
 
-<p>With this extension, you can:</p>
+<p>This extension:</p>
 
 👉 Adds controls for swapping PS station
-
 👉 Removes the default jQuery implementation on the website.
 
 ## 🎓 Usage
 
-The easiest way to use this is to install is using webstore [here](http://bit.ly/ps-extender). For some reason, if it doesn't work, then follow the <strong>offline install</strong> steps:
+The easiest way to use this is to install is using webstore [here](http://bit.ly/ps-extender). For some reason, if you want to set it up manually:
 
-1. Click on clone--->download zip
+1. Click on clone -> download zip
 2. Type chrome://extensions/ in your URL
 3. Enable Developer Mode (top-right)
 4. Click on "Load unpacked"
