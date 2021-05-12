@@ -23,28 +23,69 @@ function $(selector) {
 }
 
 if (checks()) {
+
+	const PSZYIcons = {
+		sendToTop: '<svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M24 32h336c13.3 0 24 10.7 24 24v24c0 13.3-10.7 24-24 24H24C10.7 104 0 93.3 0 80V56c0-13.3 10.7-24 24-24zm232 424V320h87.7c17.8 0 26.7-21.5 14.1-34.1L205.7 133.7c-7.5-7.5-19.8-7.5-27.3 0L26.1 285.9C13.5 298.5 22.5 320 40.3 320H128v136c0 13.3 10.7 24 24 24h80c13.3 0 24-10.7 24-24z"></path></svg>',
+		sendToBottom: '<svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M360 480H24c-13.3 0-24-10.7-24-24v-24c0-13.3 10.7-24 24-24h336c13.3 0 24 10.7 24 24v24c0 13.3-10.7 24-24 24zM128 56v136H40.3c-17.8 0-26.7 21.5-14.1 34.1l152.2 152.2c7.5 7.5 19.8 7.5 27.3 0l152.2-152.2c12.6-12.6 3.7-34.1-14.1-34.1H256V56c0-13.3-10.7-24-24-24h-80c-13.3 0-24 10.7-24 24z"></path></svg>',
+		moveUp: '<svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" ><path fill="currentColor" d="M34.9 289.5l-22.2-22.2c-9.4-9.4-9.4-24.6 0-33.9L207 39c9.4-9.4 24.6-9.4 33.9 0l194.3 194.3c9.4 9.4 9.4 24.6 0 33.9L413 289.4c-9.5 9.5-25 9.3-34.3-.4L264 168.6V456c0 13.3-10.7 24-24 24h-32c-13.3 0-24-10.7-24-24V168.6L69.2 289.1c-9.3 9.8-24.8 10-34.3.4z"></path></svg>',
+		moveDown: '<svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M413.1 222.5l22.2 22.2c9.4 9.4 9.4 24.6 0 33.9L241 473c-9.4 9.4-24.6 9.4-33.9 0L12.7 278.6c-9.4-9.4-9.4-24.6 0-33.9l22.2-22.2c9.5-9.5 25-9.3 34.3.4L184 343.4V56c0-13.3 10.7-24 24-24h32c13.3 0 24 10.7 24 24v287.4l114.8-120.5c9.3-9.8 24.8-10 34.3-.4z"></path></svg>',
+		info: '<svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 512"><path fill="currentColor" d="M20 424.229h20V279.771H20c-11.046 0-20-8.954-20-20V212c0-11.046 8.954-20 20-20h112c11.046 0 20 8.954 20 20v212.229h20c11.046 0 20 8.954 20 20V492c0 11.046-8.954 20-20 20H20c-11.046 0-20-8.954-20-20v-47.771c0-11.046 8.954-20 20-20zM96 0C56.235 0 24 32.235 24 72s32.235 72 72 72 72-32.235 72-72S135.764 0 96 0z"></path></svg>'
+	}
+
 	const styles = `
         div#__PSZY_CONTROLS__ {
+			flex: 0 0 auto;
             display: flex;
-            margin-top: 10px;
-            justify-content: center;
+            justify-content: flex-end;
             align-items: center;
+			order: 4;
+			gap: 10px;
         }
         div#__PSZY_CONTROLS__>div {
-            margin-left: 10px;
-            margin-right: 10px;
             font-size: 12px;
             background: #418aca;
             color: white;
             padding: 8px;
-            width: 30px;
-            height: 30px;
+            width: 25px;
+            height: 25px;
             display: flex;
             justify-content: center;
             border-radius: 50%;
             align-items: center;
             cursor: pointer;
         }
+
+		ul#sortable_nav>li {
+			display: flex;
+			gap: 15px;
+            align-items: center;
+		}
+
+		ul#sortable_nav>li .sortable-number {
+			flex: 0 0 auto;
+			order: 1;
+			margin-left: -60px;
+			float: none;
+		}
+
+		ul#sortable_nav>li .uiicon {
+			margin: 0px;
+			order: 2;
+		}
+
+		ul#sortable_nav>li .spacer {
+			flex: 1 1 auto;
+			order: 3;
+		}
+
+		ul#sortable_nav>li input.accomo {
+			flex: 0 0 auto;
+			order: 5;
+			float: none;
+			margin: 0;
+			width: 15px;
+			height: 15px;
+		}
 
         ul#sortable_nav>li:first-child div#__PSZY_CONTROLS__ #__PSZY_MOVEUP__ {
             display: none;
@@ -62,17 +103,29 @@ if (checks()) {
             display: none;
         }
 
+		ul#sortable_nav>li:not(:hover) div#__PSZY_CONTROLS__{
+			display: none;
+		}
+
         div#__PSZY_CONTROLS__ div#__PSZY_SWAP__ {
             border-radius: 10px;
             width: auto;
         }
+
+        div#__PSZY_CONTROLS__ div#__PSZY_MOVETO__ {
+            border-radius: 10px;
+            width: auto;
+        }
+
         div#__PSZY_CONTROLS__ div#__PSZY_MOVERANGE__ {
             border-radius: 10px;
             width: auto;
         }
-        div#__PSZY_CONTROLS__ div#__PSZY_PBANK__ {
-            border-radius: 10px;
-            width: auto;
+
+        div#__PSZY_CONTROLS__ svg {
+			pointer-events: none;
+            width: 15px;
+            height: 15px;
         }
 
         @keyframes bg {
@@ -107,14 +160,16 @@ if (checks()) {
 
 	// add controls
 	const controls = `
+	<div class="spacer">&nbsp;</div>
     <div id="__PSZY_CONTROLS__">
-        <div id="__PSZY_MOVEUP__" title="Move 1 up">&uarr;</div>
-        <div id="__PSZY_MOVEDOWN__" title="Move 1 down">&darr;</div>
-        <div id="__PSZY_TOP__" title="Send to top">&uarr;&uarr;</div>
-        <div id="__PSZY_BOTTOM__" title="Send to bottom">&darr;&darr;</div>
+        <div id="__PSZY_MOVEUP__" title="Move 1 up">${PSZYIcons.moveUp}</div>
+        <div id="__PSZY_MOVEDOWN__" title="Move 1 down">${PSZYIcons.moveDown}</div>
+        <div id="__PSZY_TOP__" title="Send to top">${PSZYIcons.sendToTop}</div>
+        <div id="__PSZY_BOTTOM__" title="Send to bottom">${PSZYIcons.sendToBottom}</div>
         <div id="__PSZY_SWAP__" title="Swap">Swap</div>
-        <div id="__PSZY_MOVERANGE__" title="Move range above a given selection">MOVERANGE</div>
-        <div id="__PSZY_PBANK__" title="open problem bank">Open Problem Bank (Toggle off for speed)</div>
+        <div id="__PSZY_MOVETO__" title="Move to">MoveTo</div>
+        <div id="__PSZY_MOVERANGE__" title="Move range above a given selection">moveRange</div>
+        <div id="__PSZY_PBANK__" title="open problem bank">${PSZYIcons.info}</div>
     </div>`
 
 	const lis = $('#sortable_nav > li')
@@ -142,28 +197,30 @@ if (checks()) {
 			case '__PSZY_SWAP__':
 				moveswap(e.target.parentNode.parentNode)
 				break
+			case '__PSZY_MOVETO__':
+				moveto(e.target.parentNode.parentNode)
+				break
 			case '__PSZY_MOVERANGE__':
 				moverange(e.target.parentNode.parentNode)
 				break
 			case '__PSZY_PBANK__':
-				if(temp===0){
-					iframer(e.target.parentNode.parentNode)
-					temp=1
-				}else{
-					iframeremover(e.target.parentNode.parentNode)
-					temp=0
-				}
+				let stid = e.target.parentNode.parentNode.querySelector('.spanclass.uiicon').attributes.spn.value
+				let fetchBody = {StationId: stid}
+				fetch("http://psd.bits-pilani.ac.in/Student/ViewActiveStationProblemBankData.aspx/getPBPOPUP", {
+					"headers": {
+						"content-type": "application/json; charset=UTF-8",
+					},
+					"referrer": "http://psd.bits-pilani.ac.in/Student/ViewActiveStationProblemBankData.aspx",
+					"referrerPolicy": "strict-origin-when-cross-origin",
+					"body": JSON.stringify(fetchBody),
+					"method": "POST",
+					"mode": "cors",
+					"credentials": "include"
+				}).then(response => response.json())
+				.then(data => JSON.parse(data.d)[0])
+				.then(data => window.open(`StationproblemBankDetails.aspx?CompanyId=${data.CompanyId}&StationId=${data.StationId}&BatchIdFor=${data.BatchIdFor}&PSTypeFor=${data.PSTypeFor}`, "_blank"))
 				break
 		}
-	}
-	function iframer(node){
-		const iFrameForProblemBank=`<iframe id="pbank" name="pbank" src="http://psd.bits-pilani.ac.in/Student/ViewActiveStationProblemBankData.aspx" style="height:400px;margin-top:10px; width:100%;" frameborder="1"></iframe>`
-		node.innerHTML+=iFrameForProblemBank
-
-	}
-	function iframeremover(node){
-		var x = node.innerHTML.indexOf("<iframe");
-   		node.innerHTML = node.innerHTML.slice(0,x);
 	}
 
 	function moveswap(node) {
@@ -201,6 +258,7 @@ if (checks()) {
 
 		correctRanks()
 	}
+
 	function moverange(node){
 		const endNodeNum = parseInt(prompt('Enter station# till which range to be made'), 10)
 		const list = $('#sortable_nav li')
@@ -264,6 +322,10 @@ if (checks()) {
 		const prevNode = node.previousSibling
 		glow(prevNode, node)
 		node.parentNode.insertBefore(node, prevNode)
+		window.scrollBy({
+			top: -1*node.offsetHeight,
+			behavior: 'smooth'
+		})
 		correctRanks()
 	}
 
@@ -271,6 +333,10 @@ if (checks()) {
 		const nextNode = node.nextSibling
 		glow(nextNode, node)
 		node.parentNode.insertBefore(nextNode, node)
+		window.scrollBy({
+			top: node.offsetHeight,
+			behavior: 'smooth'
+		})
 		correctRanks()
 	}
 
@@ -287,6 +353,25 @@ if (checks()) {
 		correctRanks()
 	}
 
+	function moveto(node) {
+		const newNodePos = parseInt(prompt('Enter preference#'), 10)
+		const list = $('#sortable_nav li')
+		const currentNodePos = list.indexOf(node)
+
+		if (isNaN(newNodePos) || newNodePos < 1) {
+			return alert('Enter a valid number')
+		}
+		if (list.length < newNodePos) {
+			return alert('Not enough stations. Try a smaller number')
+		}
+
+		const newNode = currentNodePos>=newNodePos ? list[newNodePos - 1] : list[newNodePos]
+
+		glow(node)
+		node.parentNode.insertBefore(node, newNode)
+		correctRanks()
+	}
+
 	function glow(...nodes) {
 		nodes.forEach((node) => {
 			node.classList.add('glow')
@@ -299,6 +384,7 @@ if (checks()) {
 	function correctRanks() {
 		$('#sortable_nav > li').forEach((li, index) => {
 			li.querySelector('.sortable-number span').innerText = index + 1
+			li.querySelector('.spanclass.uiicon').attributes.cls.value = index + 1
 		})
 	}
 }
