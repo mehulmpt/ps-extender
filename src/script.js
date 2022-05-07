@@ -1,3 +1,10 @@
-chrome.browserAction.onClicked.addListener((activeTab) => {
-	chrome.tabs.executeScript(null, { file: 'content.js' })
+chrome.action.onClicked.addListener((tab) => {
+	chrome.scripting.insertCSS({
+		target: { tabId: tab.id },
+		files: ['style.css']
+	})
+	chrome.scripting.executeScript({
+		target: { tabId: tab.id },
+		files: ['content.js']
+	})
 })
