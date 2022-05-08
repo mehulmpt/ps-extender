@@ -65,8 +65,8 @@ if (checks()) {
 	const filterTextBox = `
 	<div class="filter">
 		<div class="mb-3 ">
-			<label for="__PSZY_FILTER_text__" class="form-label">Select by (filter) (press enter to move)</label>
-			<input type="email" class="form-control" id="__PSZY_FILTER_text__" placeholder="onsite">
+			<label for="__PSZY_FILTER_text__" class="form-label">Select by (filter)</label>
+			<input type="text" class="form-control" id="__PSZY_FILTER_text__" placeholder="onsite">
 		</div>
 	</div>
 	<div class="filter-row">
