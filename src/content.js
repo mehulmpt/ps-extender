@@ -35,9 +35,15 @@ if (checks()) {
 	window.__PSZYSET__ = true
 
 	// disable default sorting library
-	const script = document.createElement('script')
-	script.innerHTML = `$('#sortable_nav').sortable('destroy'); $('#sortable_nav').enableSelection();`
-	document.head.appendChild(script)
+	// const script = document.createElement('script')
+	// script.innerHTML = `$('#sortable_nav').sortable('destroy'); $('#sortable_nav').enableSelection();`
+	// document.head.appendChild(script)
+	var s = document.createElement('script');
+	s.src = chrome.runtime.getURL('jquery-disable.js');
+	s.onload = function () {
+		this.remove();
+	};
+	(document.head || document.documentElement).appendChild(s);
 
 	// add styles
 	// document.head.appendChild(styleTag)

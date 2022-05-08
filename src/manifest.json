@@ -14,5 +14,11 @@
   },
   "permissions": ["activeTab", "scripting"],
   "action": {},
-  "content_security_policy": {}
+  "content_security_policy": {},
+  "web_accessible_resources": [
+    {
+      "resources": ["jquery-disable.js"],
+      "matches": ["http://psd.bits-pilani.ac.in/*"]
+    }
+  ]
 }
