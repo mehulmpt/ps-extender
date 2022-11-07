@@ -164,6 +164,18 @@ if (checks()) {
 		<div class="row">
 			<div class="col-xs-8">
 				<label>
+					Select Range
+					<input id="__PSZY_RANGE__" type="text" placeholder="0-10,14-18,20,25">
+				</label>
+				<input id="__PSZY_SELECTRANGE__" type="button" value="Select" class="btn btn-primary">
+				<input id="__PSZY_DESELECTRANGE__" type="button" value="Deselect" class="btn btn-inverse">
+			</div>
+			<div class="col-xs-8">
+				<input id="__PSZY_DESELECTALL__" type="button" value="Deselect All" class="btn btn-inverse">
+				<span id="__PSZY_SELECTEDCOUNT__">0</span> selected
+			</div>
+			<div class="col-xs-8">
+				<label>
 					Move selected to (preference#)
 					<input id="__PSZY_PREFNO__" type="number" value="1" min="1">
 				</label>
@@ -232,6 +244,15 @@ if (checks()) {
 				}).then(response => response.json())
 				.then(data => JSON.parse(data.d)[0])
 				.then(data => window.open(`StationproblemBankDetails.aspx?CompanyId=${data.CompanyId}&StationId=${data.StationId}&BatchIdFor=${data.BatchIdFor}&PSTypeFor=${data.PSTypeFor}`, "_blank"))
+				break
+			case '__PSZY_SELECTRANGE__':
+				selectRange()
+				break
+			case '__PSZY_DESELECTRANGE__':
+				deselectRange()
+				break
+			case '__PSZY_DESELECTALL__':
+				deselectAll()
 				break
 			case '__PSZY_MOVESELECTED__':
 				moveSelected()
@@ -310,12 +331,60 @@ if (checks()) {
 		if (node.matches('input, a, button')) return
 		// else (de)select the item
 		node.closest('#sortable_nav > li')?.classList.toggle('selected')
+		updateSelectedCount()
 	}
 
 	function deselectAll() {
 		$('#sortable_nav').querySelectorAll('li.selected').forEach(node => node.classList.remove('selected'))
+		updateSelectedCount()
 	}
 
+	function getRange() {
+		const ranges = $('#__PSZY_RANGE__').value.split(',')
+		const indices = []
+		ranges.forEach(r => {
+			r = r.trim()
+			// matches numbers
+			// insensitive to whitespace around number
+			const singleNum = r.match(/^(\d+)$/m)
+			if (singleNum !== null) {
+				indices.push(parseInt(singleNum[1]))
+				return
+			}
+			// matches: 10-22
+			// insensitive to whitespace around number
+			const numRange = r.match(/^(\d+)\W*-\W*(\d+)$/m)
+			if (numRange !== null) {
+				const min = parseInt(numRange[1])
+				const max = parseInt(numRange[2])
+				for (let i = min; i <= max; i++) {
+					indices.push(i)
+				}
+				return
+			}
+		})
+		return indices
+	}
+
+	function selectRange() {
+		const list = $('#sortable_nav > li')
+		getRange().forEach(i => {
+			list[i-1].classList.add('selected')
+		})
+		updateSelectedCount()
+	}
+
+	function deselectRange() {
+		const list = $('#sortable_nav > li')
+		getRange().forEach(i => {
+			list[i-1].classList.remove('selected')
+		})
+		updateSelectedCount()
+	}
+	function updateSelectedCount() {
+		const count = $('#sortable_nav').querySelectorAll('li.selected').length
+		$('#__PSZY_SELECTEDCOUNT__').innerText = count.toString()
+	}
 
 	function moveup(node) {
 		const prevNode = node.previousSibling
