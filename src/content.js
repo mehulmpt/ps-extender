@@ -171,6 +171,14 @@ if (checks()) {
 				<input id="__PSZY_DESELECTRANGE__" type="button" value="Deselect" class="btn btn-inverse">
 			</div>
 			<div class="col-xs-8">
+				<label>
+					Select Pattern
+					<input id="__PSZY_PATTERN__" type="text" placeholder="IT|Bengaluru (regex)">
+				</label>
+				<input id="__PSZY_SELECTPATTERN__" type="button" value="Select" class="btn btn-primary">
+				<input id="__PSZY_DESELECTPATTERN__" type="button" value="Deselect" class="btn btn-inverse">
+			</div>
+			<div class="col-xs-8">
 				<input id="__PSZY_DESELECTALL__" type="button" value="Deselect All" class="btn btn-inverse">
 				<span id="__PSZY_SELECTEDCOUNT__">0</span> selected
 			</div>
@@ -250,6 +258,12 @@ if (checks()) {
 				break
 			case '__PSZY_DESELECTRANGE__':
 				deselectRange()
+				break
+			case '__PSZY_SELECTPATTERN__':
+				selectPattern()
+				break
+			case '__PSZY_DESELECTPATTERN__':
+				deselectPattern()
 				break
 			case '__PSZY_DESELECTALL__':
 				deselectAll()
@@ -381,6 +395,36 @@ if (checks()) {
 		})
 		updateSelectedCount()
 	}
+
+	function getPattern() {
+		const pattern = $('#__PSZY_PATTERN__').value
+		return new RegExp(pattern, 'im')
+	}
+
+	function selectPattern() {
+		const list = $('#sortable_nav > li')
+		const re = getPattern()
+		list.forEach(n => {
+			const text = n.querySelector('span.spanclass').innerText
+			if (re.test(text)) {
+				n.classList.add('selected')
+			}
+		})
+		updateSelectedCount()
+	}
+
+	function deselectPattern() {
+		const list = $('#sortable_nav > li')
+		const re = getPattern()
+		list.forEach(n => {
+			const text = n.querySelector('span.spanclass').innerText
+			if (re.test(text)) {
+				n.classList.remove('selected')
+			}
+		})
+		updateSelectedCount()
+	}
+
 	function updateSelectedCount() {
 		const count = $('#sortable_nav').querySelectorAll('li.selected').length
 		$('#__PSZY_SELECTEDCOUNT__').innerText = count.toString()
