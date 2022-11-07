@@ -158,6 +158,23 @@ if (checks()) {
 	// add styles
 	document.head.appendChild(styleTag)
 
+	// global controls
+	const globalControls = `
+	<div id="__PSZY_GLOBAL_CONTROLS__">
+		<div class="row">
+			<div class="col-xs-8">
+				<label>
+					Move selected to (preference#)
+					<input id="__PSZY_PREFNO__" type="number" value="1" min="1">
+				</label>
+				<input id="__PSZY_MOVESELECTED__" type="button" value="Move" class="btn btn-primary">
+			</div>
+		</div>
+	</div>`
+
+	const divider = $('#rptlist > .hr.hr-dotted')
+	divider.outerHTML = globalControls + divider.outerHTML
+
 	// add controls
 	const controls = `
 	<div class="spacer">&nbsp;</div>
@@ -168,7 +185,6 @@ if (checks()) {
         <div id="__PSZY_BOTTOM__" title="Send to bottom">${PSZYIcons.sendToBottom}</div>
         <div id="__PSZY_SWAP__" title="Swap">Swap</div>
         <div id="__PSZY_MOVETO__" title="Move to">MoveTo</div>
-        <div id="__PSZY_MOVERANGE__" title="Move range above a given selection">moveRange</div>
         <div id="__PSZY_PBANK__" title="open problem bank">${PSZYIcons.info}</div>
     </div>`
 
@@ -200,9 +216,6 @@ if (checks()) {
 			case '__PSZY_MOVETO__':
 				moveto(e.target.parentNode.parentNode)
 				break
-			case '__PSZY_MOVERANGE__':
-				moverange(e.target.parentNode.parentNode)
-				break
 			case '__PSZY_PBANK__':
 				let stid = e.target.parentNode.parentNode.querySelector('.spanclass.uiicon').attributes.spn.value
 				let fetchBody = {StationId: stid}
@@ -219,6 +232,12 @@ if (checks()) {
 				}).then(response => response.json())
 				.then(data => JSON.parse(data.d)[0])
 				.then(data => window.open(`StationproblemBankDetails.aspx?CompanyId=${data.CompanyId}&StationId=${data.StationId}&BatchIdFor=${data.BatchIdFor}&PSTypeFor=${data.PSTypeFor}`, "_blank"))
+				break
+			case '__PSZY_MOVESELECTED__':
+				moveSelected()
+				break
+			default:
+				selectNode(e.target)
 				break
 		}
 	}
@@ -259,64 +278,44 @@ if (checks()) {
 		correctRanks()
 	}
 
-	function moverange(node){
-		const endNodeNum = parseInt(prompt('Enter station# till which range to be made'), 10)
+	function moveSelected() {
+		const selectedItems = Array.from($('#sortable_nav').querySelectorAll('li.selected'))
+		const targetPref = parseInt($('#__PSZY_PREFNO__').value, 10)
 		const list = $('#sortable_nav li')
-
-		debugger
-		if (isNaN(endNodeNum) || endNodeNum < 1) {
+		// input validation
+		if (selectedItems.length == 0) {
+			return alert('Select at least one station')
+		}
+		if (isNaN(targetPref) || targetPref < 1) {
 			return alert('Enter a valid number')
 		}
-
-		if (list.length < endNodeNum) {
+		if (list.length < targetPref) {
 			return alert('Not enough stations. Try a smaller number')
 		}
-
-		const endNode = list[endNodeNum - 1]
-
-		debugger
-		const begNodeNum = parseInt(node.querySelector('.sortable-number span').innerText)
-		const refNodeNum = parseInt(prompt('Enter station# above(or below) which to move the selected range'), 10)
-		debugger
-		if (isNaN(refNodeNum) || refNodeNum < 1) {
-			return alert('Enter a valid number')
-		}
-
-		if (list.length < refNodeNum) {
-			return alert('Not enough stations. Try a smaller number')
-		}
-		if (begNodeNum<= refNodeNum && refNodeNum<=endNodeNum) {
-			return alert('Cannot Move selected range on given PS staion. Try again with other value outside of selection.' )
-		}
-
-		const refNode = list[refNodeNum - 1]
-
-		debugger
-		// if reference node above selection
-		if(refNodeNum<begNodeNum){
-			//for each node in range move up begNodeNum-refNodeNum+1
-			for(var i=begNodeNum-1;i<=endNodeNum-1;i++){
-				noOfMoveUps=begNodeNum-refNodeNum
-				while(noOfMoveUps!==0){
-					moveup(list[i])
-					noOfMoveUps--
-				}
-			}
-
-		}
-		// else
-		else{
-			// for each node in selected range move down
-			for(var j=endNodeNum-1;j>=begNodeNum-1;j--){
-				noOfMoveDowns=refNodeNum-endNodeNum
-				while(noOfMoveDowns!==0){
-					movedown(list[j])
-					noOfMoveDowns--
-				}
-			} 
-		}
-
+		// move
+		// convert to 0 based index and correct for rank gap created
+		selectedRanks = selectedItems.map(n => n.querySelector('#spnRank').innerText)
+		gap = selectedRanks.filter(r => r <= targetPref).length
+		const targetNode = list[targetPref - 1 + gap]
+		selectedItems.forEach(node => {
+			node.parentNode.insertBefore(node, targetNode)
+		})
+		correctRanks()
+		glow(...selectedItems)
+		deselectAll()
 	}
+
+	function selectNode(node) {
+		// ignore clicks on any interactive element
+		if (node.matches('input, a, button')) return
+		// else (de)select the item
+		node.closest('#sortable_nav > li')?.classList.toggle('selected')
+	}
+
+	function deselectAll() {
+		$('#sortable_nav').querySelectorAll('li.selected').forEach(node => node.classList.remove('selected'))
+	}
+
 
 	function moveup(node) {
 		const prevNode = node.previousSibling
