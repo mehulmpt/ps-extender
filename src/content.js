@@ -188,6 +188,8 @@ if (checks()) {
 					<input id="__PSZY_PREFNO__" type="number" value="1" min="1">
 				</label>
 				<input id="__PSZY_MOVESELECTED__" type="button" value="Move" class="btn btn-primary">
+				<input id="__PSZY_MOVESELECTEDTOP__" type="button" value="Top" class="btn btn-inverse">
+				<input id="__PSZY_MOVESELECTEDBOTTOM__" type="button" value="Bottom" class="btn btn-inverse">
 			</div>
 		</div>
 	</div>`
@@ -269,7 +271,13 @@ if (checks()) {
 				deselectAll()
 				break
 			case '__PSZY_MOVESELECTED__':
-				moveSelected()
+				moveselectedto()
+				break
+			case '__PSZY_MOVESELECTEDTOP__':
+				moveselectedtop()
+				break
+			case '__PSZY_MOVESELECTEDBOTTOM__':
+				moveselectedbottom()
 				break
 			default:
 				selectNode(e.target)
@@ -278,73 +286,64 @@ if (checks()) {
 	}
 
 	function moveswap(node) {
-		const nextNodeNum = parseInt(prompt('Enter station# to swap with'), 10)
+		const thisPos = parseInt(node.querySelector('#spnRank').innerText)
+		const otherPos = parseInt(prompt('Enter station# to swap with'), 10)
 		const list = $('#sortable_nav li')
-
-		debugger
-		if (isNaN(nextNodeNum) || nextNodeNum < 1) {
-			return alert('Enter a valid number')
-		}
-
-		if (list.length < nextNodeNum) {
-			return alert('Not enough stations. Try a smaller number')
-		}
-
-		const otherNode = list[nextNodeNum - 1]
-
-		debugger
-
-		if (otherNode === node) {
-			return alert('Same station')
-		}
-
-		if (otherNode.nextSibling !== node) {
-			const nextNode = otherNode.nextSibling
-			otherNode.parentNode.insertBefore(otherNode, node)
-			node.parentNode.insertBefore(node, nextNode)
-			glow(node, otherNode)
-		} else {
-			const nextNode = node.nextSibling
-			node.parentNode.insertBefore(node, otherNode)
-			otherNode.parentNode.insertBefore(otherNode, nextNode)
-			glow(otherNode, node)
-		}
-
-		correctRanks()
+		const otherNode = list[otherPos - 1] // zero based index
+		moveSelected([node], otherPos)
+		moveSelected([otherNode], thisPos)
 	}
 
-	function moveSelected() {
-		const selectedItems = Array.from($('#sortable_nav').querySelectorAll('li.selected'))
-		const targetPref = parseInt($('#__PSZY_PREFNO__').value, 10)
+	function getSelected() {
+		return $('#sortable_nav').querySelectorAll('li.selected')
+	}
+
+	function getAllItems() {
+		return $('#sortable_nav > li')
+	}
+
+	function moveselectedto() {
+		moveSelected(getSelected(), parseInt($('#__PSZY_PREFNO__').value, 10))
+	}
+
+	function moveselectedtop() {
+		moveSelected(getSelected(), 1)
+	}
+
+	function moveselectedbottom() {
+		moveSelected(getSelected(), getAllItems().length)
+	}
+
+	function moveSelected(selection, to) {
 		const listContainer = $('#sortable_nav')
-		let list = $('#sortable_nav li')
+		let list = getAllItems()
 		// input validation
-		if (selectedItems.length == 0) {
+		if (selection.length == 0) {
 			return alert('Select at least one station')
 		}
-		if (isNaN(targetPref) || targetPref < 1) {
-			return alert('Enter a valid number')
+		if (!Number.isInteger(to) || isNaN(to) || to < 1) {
+			return alert('Enter a valid preference number')
 		}
-		if (list.length < targetPref) {
+		if (to > list.length) {
 			return alert('Not enough stations. Try a smaller number')
 		}
 		// move
-		selectedItems.forEach(node => {
+		selection.forEach(node => {
 			listContainer.removeChild(node)
 		})
-		list = $('#sortable_nav li')
-		if (targetPref < list.length) {
-			let targetNode = list[targetPref - 1] // zero based index
-			selectedItems.forEach(node => {
+		list = getAllItems()
+		if (to < list.length) {
+			const targetNode = list[to - 1] // zero based index
+			selection.forEach(node => {
 				listContainer.insertBefore(node, targetNode)
 			})
 		} else {
-			selectedItems.forEach(node => {
+			selection.forEach(node => {
 				listContainer.appendChild(node)
 			})
 		}
 		correctRanks()
-		glow(...selectedItems)
+		glow(...selection)
 		deselectAll()
 	}
 
@@ -357,7 +356,7 @@ if (checks()) {
 	}
 
 	function deselectAll() {
-		$('#sortable_nav').querySelectorAll('li.selected').forEach(node => node.classList.remove('selected'))
+		getSelected().forEach(node => node.classList.remove('selected'))
 		updateSelectedCount()
 	}
 
@@ -389,17 +388,19 @@ if (checks()) {
 	}
 
 	function selectRange() {
-		const list = $('#sortable_nav > li')
+		const list = getAllItems()
 		getRange().forEach(i => {
-			list[i-1].classList.add('selected')
+			// zero based indexing
+			list[i - 1].classList.add('selected')
 		})
 		updateSelectedCount()
 	}
 
 	function deselectRange() {
-		const list = $('#sortable_nav > li')
+		const list = getAllItems()
 		getRange().forEach(i => {
-			list[i-1].classList.remove('selected')
+			// zero based indexing
+			list[i - 1].classList.remove('selected')
 		})
 		updateSelectedCount()
 	}
@@ -410,7 +411,7 @@ if (checks()) {
 	}
 
 	function selectPattern() {
-		const list = $('#sortable_nav > li')
+		const list = getAllItems()
 		const re = getPattern()
 		list.forEach(n => {
 			const text = n.querySelector('span.spanclass').innerText
@@ -422,7 +423,7 @@ if (checks()) {
 	}
 
 	function deselectPattern() {
-		const list = $('#sortable_nav > li')
+		const list = getAllItems()
 		const re = getPattern()
 		list.forEach(n => {
 			const text = n.querySelector('span.spanclass').innerText
@@ -434,62 +435,39 @@ if (checks()) {
 	}
 
 	function updateSelectedCount() {
-		const count = $('#sortable_nav').querySelectorAll('li.selected').length
+		const count = getSelected().length
 		$('#__PSZY_SELECTEDCOUNT__').innerText = count.toString()
 	}
 
 	function moveup(node) {
-		const prevNode = node.previousSibling
-		glow(prevNode, node)
-		node.parentNode.insertBefore(node, prevNode)
+		const newPos = parseInt(node.previousSibling.querySelector('#spnRank').innerText)
+		moveSelected([node], newPos)
 		window.scrollBy({
-			top: -1*node.offsetHeight,
+			top: -1 * node.offsetHeight,
 			behavior: 'smooth'
 		})
-		correctRanks()
 	}
 
 	function movedown(node) {
-		const nextNode = node.nextSibling
-		glow(nextNode, node)
-		node.parentNode.insertBefore(nextNode, node)
+		const newPos = parseInt(node.nextSibling.querySelector('#spnRank').innerText)
+		moveSelected([node], newPos)
 		window.scrollBy({
 			top: node.offsetHeight,
 			behavior: 'smooth'
 		})
-		correctRanks()
 	}
 
 	function movetotop(node) {
-		const prevNode = node.parentNode.querySelector('li:first-child')
-		glow(node)
-		node.parentNode.insertBefore(node, prevNode)
-		correctRanks()
+		moveSelected([node], 1)
 	}
 
 	function movetobottom(node) {
-		glow(node)
-		node.parentNode.appendChild(node)
-		correctRanks()
+		moveSelected([node], getAllItems().length)
 	}
 
 	function moveto(node) {
 		const newNodePos = parseInt(prompt('Enter preference#'), 10)
-		const list = $('#sortable_nav li')
-		const currentNodePos = list.indexOf(node)
-
-		if (isNaN(newNodePos) || newNodePos < 1) {
-			return alert('Enter a valid number')
-		}
-		if (list.length < newNodePos) {
-			return alert('Not enough stations. Try a smaller number')
-		}
-
-		const newNode = currentNodePos>=newNodePos ? list[newNodePos - 1] : list[newNodePos]
-
-		glow(node)
-		node.parentNode.insertBefore(node, newNode)
-		correctRanks()
+		moveSelected([node], newNodePos)
 	}
 
 	function glow(...nodes) {
