@@ -316,7 +316,8 @@ if (checks()) {
 	function moveSelected() {
 		const selectedItems = Array.from($('#sortable_nav').querySelectorAll('li.selected'))
 		const targetPref = parseInt($('#__PSZY_PREFNO__').value, 10)
-		const list = $('#sortable_nav li')
+		const listContainer = $('#sortable_nav')
+		let list = $('#sortable_nav li')
 		// input validation
 		if (selectedItems.length == 0) {
 			return alert('Select at least one station')
@@ -328,13 +329,20 @@ if (checks()) {
 			return alert('Not enough stations. Try a smaller number')
 		}
 		// move
-		// convert to 0 based index and correct for rank gap created
-		selectedRanks = selectedItems.map(n => n.querySelector('#spnRank').innerText)
-		gap = selectedRanks.filter(r => r <= targetPref).length
-		const targetNode = list[targetPref - 1 + gap]
 		selectedItems.forEach(node => {
-			node.parentNode.insertBefore(node, targetNode)
+			listContainer.removeChild(node)
 		})
+		list = $('#sortable_nav li')
+		if (targetPref < list.length) {
+			let targetNode = list[targetPref - 1] // zero based index
+			selectedItems.forEach(node => {
+				listContainer.insertBefore(node, targetNode)
+			})
+		} else {
+			selectedItems.forEach(node => {
+				listContainer.appendChild(node)
+			})
+		}
 		correctRanks()
 		glow(...selectedItems)
 		deselectAll()
