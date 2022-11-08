@@ -41,19 +41,6 @@ if (checks()) {
 			order: 4;
 			gap: 10px;
         }
-        div#__PSZY_CONTROLS__>div {
-            font-size: 12px;
-            background: #418aca;
-            color: white;
-            padding: 8px;
-            width: 25px;
-            height: 25px;
-            display: flex;
-            justify-content: center;
-            border-radius: 50%;
-            align-items: center;
-            cursor: pointer;
-        }
 
 		ul#sortable_nav>li {
 			display: flex;
@@ -83,8 +70,8 @@ if (checks()) {
 			order: 5;
 			float: none;
 			margin: 0;
-			width: 15px;
-			height: 15px;
+			width: 24px;
+			height: 24px;
 		}
 
         ul#sortable_nav>li:first-child div#__PSZY_CONTROLS__ #__PSZY_MOVEUP__ {
@@ -107,25 +94,10 @@ if (checks()) {
 			display: none;
 		}
 
-        div#__PSZY_CONTROLS__ div#__PSZY_SWAP__ {
-            border-radius: 10px;
-            width: auto;
-        }
-
-        div#__PSZY_CONTROLS__ div#__PSZY_MOVETO__ {
-            border-radius: 10px;
-            width: auto;
-        }
-
-        div#__PSZY_CONTROLS__ div#__PSZY_MOVERANGE__ {
-            border-radius: 10px;
-            width: auto;
-        }
-
         div#__PSZY_CONTROLS__ svg {
 			pointer-events: none;
-            width: 15px;
-            height: 15px;
+            width: 12px;
+            height: 12px;
         }
 
         @keyframes bg {
@@ -201,13 +173,13 @@ if (checks()) {
 	const controls = `
 	<div class="spacer">&nbsp;</div>
     <div id="__PSZY_CONTROLS__">
-        <div id="__PSZY_MOVEUP__" title="Move 1 up">${PSZYIcons.moveUp}</div>
-        <div id="__PSZY_MOVEDOWN__" title="Move 1 down">${PSZYIcons.moveDown}</div>
-        <div id="__PSZY_TOP__" title="Send to top">${PSZYIcons.sendToTop}</div>
-        <div id="__PSZY_BOTTOM__" title="Send to bottom">${PSZYIcons.sendToBottom}</div>
-        <div id="__PSZY_SWAP__" title="Swap">Swap</div>
-        <div id="__PSZY_MOVETO__" title="Move to">MoveTo</div>
-        <div id="__PSZY_PBANK__" title="open problem bank">${PSZYIcons.info}</div>
+        <div id="__PSZY_MOVEUP__" class="btn btn-primary" title="Move 1 up">${PSZYIcons.moveUp}</div>
+        <div id="__PSZY_MOVEDOWN__" class="btn btn-primary" title="Move 1 down">${PSZYIcons.moveDown}</div>
+        <div id="__PSZY_TOP__" class="btn btn-primary" title="Send to top">${PSZYIcons.sendToTop}</div>
+        <div id="__PSZY_BOTTOM__" class="btn btn-primary" title="Send to bottom">${PSZYIcons.sendToBottom}</div>
+        <div id="__PSZY_SWAP__" class="btn btn-primary" title="Swap">Swap</div>
+        <div id="__PSZY_MOVETO__" class="btn btn-primary" title="Move to">MoveTo</div>
+        <div id="__PSZY_PBANK__" class="btn btn-inverse" title="open problem bank">${PSZYIcons.info}</div>
     </div>`
 
 	const lis = $('#sortable_nav > li')
