@@ -143,6 +143,16 @@ if (checks()) {
 	<div id="__PSZY_GLOBAL_CONTROLS__">
 		<div class="row">
 			<div class="col-xs-8">
+				Export to CSV for offline editing
+			</div>
+			<div class="col-xs-8">
+				<input id="__PSZY_EXPORT__" type="button" value="Export" class="btn btn-primary">
+				<input id="__PSZY_IMPORT__" type="button" value="Import" class="btn btn-inverse">
+				<input id="__PSZY_FILE__" type="file" accept=".csv,text/csv" style="display: none" />
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-8">
 				<label>
 					Select Range
 					<input id="__PSZY_RANGE__" type="text" placeholder="0-10,14-18,20,25">
@@ -246,6 +256,12 @@ if (checks()) {
 				}).then(response => response.json())
 				.then(data => JSON.parse(data.d)[0])
 				.then(data => window.open(`StationproblemBankDetails.aspx?CompanyId=${data.CompanyId}&StationId=${data.StationId}&BatchIdFor=${data.BatchIdFor}&PSTypeFor=${data.PSTypeFor}`, "_blank"))
+				break
+			case '__PSZY_EXPORT__':
+				exportCsv()
+				break
+			case '__PSZY_IMPORT__':
+				importCsv()
 				break
 			case '__PSZY_SELECTRANGE__':
 				selectRange()
@@ -473,8 +489,54 @@ if (checks()) {
 
 	function correctRanks() {
 		$('#sortable_nav > li').forEach((li, index) => {
-			li.querySelector('.sortable-number span').innerText = index + 1
-			li.querySelector('.spanclass.uiicon').attributes.cls.value = index + 1
+			li.querySelector('#spnRank').innerText = index + 1
+			li.querySelector('span.spanclass').setAttribute('cls', index + 1)
+		})
+	}
+
+	function exportCsv() {
+		const list = getAllItems()
+		const data = [['ID', 'NAME', 'ACCOMO']]
+		list.forEach(n => {
+			const a = n.querySelector('span.spanclass')
+			const b = n.querySelector('input[type="checkbox"]')
+			data.push([a.getAttribute('spn'), encodeURIComponent(a.innerText), Number(b.checked)])
+		})
+		const blob = new Blob([data.map(row => row.join(',')).join('\n')], { type: 'text/html', endings: 'native' })
+		const url = URL.createObjectURL(blob)
+		const anchor = document.createElement('a')
+		anchor.href = url
+		anchor.download = 'ps2_preferences.csv'
+		document.body.appendChild(anchor)
+		anchor.click()
+		anchor.remove()
+		URL.revokeObjectURL(url)
+	}
+
+	function importCsv() {
+		const confirmed = confirm('WARNING: not tested when csv file becomes stale.\nClick OK to continue (unsafe).')
+		if (!confirmed) return
+		const picker = $('#__PSZY_FILE__')
+		picker.click()
+		picker.addEventListener('change', () => {
+			picker.files?.[0]?.text().then(text => {
+				const list = getAllItems()
+				if (!text.startsWith('ID,NAME,ACCOMO')) return alert('Bad File')
+				const data = text.trim().split('\n').map(s => s.trim().split(','))
+				data.shift() // remove header
+				data.forEach((r, i) => {
+					const a = list[i].querySelector('span.spanclass')
+					const b = list[i].querySelector('input[type="checkbox"]')
+					const [id, name, accomo] = r
+					const nameText = decodeURIComponent(name)
+					a.setAttribute('spn', id)
+					a.setAttribute('cname', nameText)
+					a.innerText = nameText
+					b.checked = Number(accomo)
+				})
+				correctRanks()
+				console.log('imported')
+			})
 		})
 	}
 }
