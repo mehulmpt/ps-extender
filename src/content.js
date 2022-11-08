@@ -33,13 +33,18 @@ if (checks()) {
 	}
 
 	const styles = `
-        div#__PSZY_CONTROLS__ {
+		#__PSZY_GLOBAL_CONTROLS__ .row {
+			margin: 12px auto;
+		}
+
+        #__PSZY_CONTROLS__ {
 			flex: 0 0 auto;
             display: flex;
             justify-content: flex-end;
             align-items: center;
 			order: 4;
 			gap: 10px;
+			height: 24px;
         }
 
 		ul#sortable_nav>li {
@@ -60,8 +65,11 @@ if (checks()) {
 			order: 2;
 		}
 
-		ul#sortable_nav>li .spacer {
+		.spacer {
 			flex: 1 1 auto;
+		}
+
+		ul#sortable_nav>li .spacer {
 			order: 3;
 		}
 
@@ -139,26 +147,38 @@ if (checks()) {
 					Select Range
 					<input id="__PSZY_RANGE__" type="text" placeholder="0-10,14-18,20,25">
 				</label>
+			</div>
+			<div class="col-xs-8">
 				<input id="__PSZY_SELECTRANGE__" type="button" value="Select" class="btn btn-primary">
 				<input id="__PSZY_DESELECTRANGE__" type="button" value="Deselect" class="btn btn-inverse">
 			</div>
+		</div>
+		<div class="row">
 			<div class="col-xs-8">
 				<label>
 					Select Pattern
 					<input id="__PSZY_PATTERN__" type="text" placeholder="IT|Bengaluru (regex)">
 				</label>
+			</div>
+			<div class="col-xs-8">
 				<input id="__PSZY_SELECTPATTERN__" type="button" value="Select" class="btn btn-primary">
 				<input id="__PSZY_DESELECTPATTERN__" type="button" value="Deselect" class="btn btn-inverse">
 			</div>
+		</div>
+		<div class="row">
 			<div class="col-xs-8">
 				<input id="__PSZY_DESELECTALL__" type="button" value="Deselect All" class="btn btn-inverse">
 				<span id="__PSZY_SELECTEDCOUNT__">0</span> selected
 			</div>
+		</div>
+		<div class="row">
 			<div class="col-xs-8">
 				<label>
 					Move selected to (preference#)
 					<input id="__PSZY_PREFNO__" type="number" value="1" min="1">
 				</label>
+			</div>
+			<div class="col-xs-8">
 				<input id="__PSZY_MOVESELECTED__" type="button" value="Move" class="btn btn-primary">
 				<input id="__PSZY_MOVESELECTEDTOP__" type="button" value="Top" class="btn btn-inverse">
 				<input id="__PSZY_MOVESELECTEDBOTTOM__" type="button" value="Bottom" class="btn btn-inverse">
