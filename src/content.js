@@ -291,8 +291,8 @@ if (checks()) {
 		const otherPos = parseInt(prompt('Enter station# to swap with'), 10)
 		const list = $('#sortable_nav li')
 		const otherNode = list[otherPos - 1] // zero based index
-		moveSelected([node], otherPos)
-		moveSelected([otherNode], thisPos)
+		moveSelected([node], otherPos, { preserveSelection: true, recalculateRanks: false })
+		moveSelected([otherNode], thisPos, { preserveSelection: true })
 	}
 
 	function getSelected() {
@@ -315,7 +315,7 @@ if (checks()) {
 		moveSelected(getSelected(), getAllItems().length)
 	}
 
-	function moveSelected(selection, to) {
+	function moveSelected(selection, to, { preserveSelection = false, recalculateRanks = true } = {}) {
 		const listContainer = $('#sortable_nav')
 		let list = getAllItems()
 		// input validation
@@ -343,9 +343,9 @@ if (checks()) {
 				listContainer.appendChild(node)
 			})
 		}
-		correctRanks()
+		if (recalculateRanks) correctRanks()
 		glow(...selection)
-		deselectAll()
+		if (!preserveSelection) deselectAll()
 	}
 
 	function selectNode(node) {
@@ -442,7 +442,7 @@ if (checks()) {
 
 	function moveup(node) {
 		const newPos = parseInt(node.previousSibling.querySelector('#spnRank').innerText)
-		moveSelected([node], newPos)
+		moveSelected([node], newPos, { preserveSelection: true })
 		window.scrollBy({
 			top: -1 * node.offsetHeight,
 			behavior: 'smooth'
@@ -451,7 +451,7 @@ if (checks()) {
 
 	function movedown(node) {
 		const newPos = parseInt(node.nextSibling.querySelector('#spnRank').innerText)
-		moveSelected([node], newPos)
+		moveSelected([node], newPos, { preserveSelection: true })
 		window.scrollBy({
 			top: node.offsetHeight,
 			behavior: 'smooth'
@@ -459,16 +459,16 @@ if (checks()) {
 	}
 
 	function movetotop(node) {
-		moveSelected([node], 1)
+		moveSelected([node], 1, { preserveSelection: true })
 	}
 
 	function movetobottom(node) {
-		moveSelected([node], getAllItems().length)
+		moveSelected([node], getAllItems().length, { preserveSelection: true })
 	}
 
 	function moveto(node) {
 		const newNodePos = parseInt(prompt('Enter preference#'), 10)
-		moveSelected([node], newNodePos)
+		moveSelected([node], newNodePos, { preserveSelection: true })
 	}
 
 	function glow(...nodes) {
