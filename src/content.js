@@ -34,10 +34,6 @@ if (checks()) {
 	}
 
 	const styles = `
-		#__PSZY_GLOBAL_CONTROLS__ .row {
-			margin: 12px auto;
-		}
-
         #__PSZY_CONTROLS__ {
 			flex: 0 0 auto;
             display: flex;
@@ -83,31 +79,22 @@ if (checks()) {
 			height: 24px;
 		}
 
-        ul#sortable_nav>li:first-child div#__PSZY_CONTROLS__ #__PSZY_MOVEUP__ {
-            display: none;
+        #sortable_nav>li:first-child div #__PSZY_MOVEUP__ ,
+        #sortable_nav>li:first-child div #__PSZY_TOP__ ,
+        #sortable_nav>li:last-child div #__PSZY_MOVEDOWN__ ,
+        #sortable_nav>li:last-child div #__PSZY_BOTTOM__ {
+            visibility: hidden;
         }
 
-        ul#sortable_nav>li:first-child div#__PSZY_CONTROLS__ #__PSZY_TOP__ {
-            display: none;
-        }
-
-        ul#sortable_nav>li:last-child div#__PSZY_CONTROLS__ #__PSZY_MOVEDOWN__ {
-            display: none;
-        }
-
-        ul#sortable_nav>li:last-child div#__PSZY_CONTROLS__ #__PSZY_BOTTOM__ {
-            display: none;
-        }
-
-		ul#sortable_nav>li:not(:hover) div#__PSZY_CONTROLS__{
+		#sortable_nav>li:not(:hover) #__PSZY_CONTROLS__{
 			display: none;
 		}
 
         #__PSZY_CONTROLS__ svg,
 		#__PSZY_GLOBAL_CONTROLS__ svg {
 			pointer-events: none;
-            width: 12px;
-            height: 12px;
+            width: 1em;
+            height: 1em;
         }
 
         @keyframes bg {
@@ -143,62 +130,59 @@ if (checks()) {
 	// global controls
 	const globalControls = `
 	<div id="__PSZY_GLOBAL_CONTROLS__">
-		<div class="row">
-			<div class="col-xs-8">
-				Export to CSV for offline editing
+		<form class="form-horizontal">
+			<hr>
+			<div class="form-group">
+				<label class="col-md-4 control-label">Backup</label>
+				<div class="col-md-4">
+					<input id="__PSZY_EXPORT__" type="button" value="Export" class="btn btn-primary">
+					<input id="__PSZY_IMPORT__" type="button" value="Import" class="btn btn-inverse">
+					<input id="__PSZY_FILE__" type="file" accept=".csv,text/csv" style="display: none" />
+				</div>
 			</div>
-			<div class="col-xs-8">
-				<input id="__PSZY_EXPORT__" type="button" value="Export" class="btn btn-primary">
-				<input id="__PSZY_IMPORT__" type="button" value="Import" class="btn btn-inverse">
-				<input id="__PSZY_FILE__" type="file" accept=".csv,text/csv" style="display: none" />
+			<hr>
+			<div class="form-group">
+				<label class="col-md-4 control-label">Select Range</label>
+				<div class="col-md-4">
+					<input id="__PSZY_RANGE__" class="form-control" type="search" placeholder="0-10,14-18,20,25">
+				</div>
+				<div class="col-md-4">
+					<input id="__PSZY_SELECTRANGE__" type="button" value="Select" class="btn btn-primary">
+					<input id="__PSZY_DESELECTRANGE__" type="button" value="Deselect" class="btn btn-inverse">
+				</div>
 			</div>
-		</div>
-		<div class="row">
-			<div class="col-xs-8">
-				<label>
-					Select Range
-					<input id="__PSZY_RANGE__" type="text" placeholder="0-10,14-18,20,25">
-				</label>
+			<div class="form-group">
+				<label class="col-md-4 control-label">Select Pattern</label>
+				<div class="col-md-4">
+					<input id="__PSZY_PATTERN__" class="form-control" type="search" placeholder="IT|Bengaluru (regex)">
+				</div>
+				<div class="col-md-4">
+					<input id="__PSZY_SELECTPATTERN__" type="button" value="Select" class="btn btn-primary">
+					<input id="__PSZY_DESELECTPATTERN__" type="button" value="Deselect" class="btn btn-inverse">
+				</div>
 			</div>
-			<div class="col-xs-8">
-				<input id="__PSZY_SELECTRANGE__" type="button" value="Select" class="btn btn-primary">
-				<input id="__PSZY_DESELECTRANGE__" type="button" value="Deselect" class="btn btn-inverse">
+			<div class="form-group">
+				<label class="col-md-4 control-label"></label>
+				<div class="col-md-4">
+					<input id="__PSZY_DESELECTALL__" type="button" value="Deselect All" class="btn btn-inverse">
+					<span><span id="__PSZY_SELECTEDCOUNT__" >0</span> selected</span>
+				</div>
 			</div>
-		</div>
-		<div class="row">
-			<div class="col-xs-8">
-				<label>
-					Select Pattern
-					<input id="__PSZY_PATTERN__" type="text" placeholder="IT|Bengaluru (regex)">
-				</label>
+			<hr>
+			<div class="form-group">
+				<label class="col-md-4 control-label">Move selected to preference#</label>
+				<div class="col-md-4">
+					<input id="__PSZY_PREFNO__" class="form-control" type="number" value="1" min="1">
+				</div>
+				<div class="col-md-4">
+					<input id="__PSZY_MOVESELECTED__" type="button" value="Move" class="btn btn-primary">
+					<input id="__PSZY_MOVESELECTEDTOP__" type="button" value="Top" class="btn btn-inverse">
+					<input id="__PSZY_MOVESELECTEDBOTTOM__" type="button" value="Bottom" class="btn btn-inverse">
+				</div>
 			</div>
-			<div class="col-xs-8">
-				<input id="__PSZY_SELECTPATTERN__" type="button" value="Select" class="btn btn-primary">
-				<input id="__PSZY_DESELECTPATTERN__" type="button" value="Deselect" class="btn btn-inverse">
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-xs-8">
-				<input id="__PSZY_DESELECTALL__" type="button" value="Deselect All" class="btn btn-inverse">
-				<span id="__PSZY_SELECTEDCOUNT__">0</span> selected
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-xs-8">
-				<label>
-					Move selected to (preference#)
-					<input id="__PSZY_PREFNO__" type="number" value="1" min="1">
-				</label>
-			</div>
-			<div class="col-xs-8">
-				<input id="__PSZY_MOVESELECTED__" type="button" value="Move" class="btn btn-primary">
-				<input id="__PSZY_MOVESELECTEDTOP__" type="button" value="Top" class="btn btn-inverse">
-				<input id="__PSZY_MOVESELECTEDBOTTOM__" type="button" value="Bottom" class="btn btn-inverse">
-			</div>
-		</div>
-		<div>
-			<div id="__PSZY_SCROLLTOTOP__" class="btn btn-inverse" style="position:fixed;right:20px;bottom:20px">${PSZYIcons.scrollToTop}</div>
-		</div>
+			<hr>
+		</form>
+		<div id="__PSZY_SCROLLTOTOP__" class="btn btn-primary btn-scroll-to-top" >${PSZYIcons.scrollToTop}</div>
 	</div>`
 
 	const divider = $('#rptlist > .hr.hr-dotted')
@@ -208,22 +192,19 @@ if (checks()) {
 	const controls = `
 	<div class="spacer">&nbsp;</div>
     <div id="__PSZY_CONTROLS__">
-        <div id="__PSZY_MOVEUP__" class="btn btn-primary" title="Move 1 up">${PSZYIcons.moveUp}</div>
-        <div id="__PSZY_MOVEDOWN__" class="btn btn-primary" title="Move 1 down">${PSZYIcons.moveDown}</div>
-        <div id="__PSZY_TOP__" class="btn btn-primary" title="Send to top">${PSZYIcons.sendToTop}</div>
-        <div id="__PSZY_BOTTOM__" class="btn btn-primary" title="Send to bottom">${PSZYIcons.sendToBottom}</div>
-        <div id="__PSZY_SWAP__" class="btn btn-primary" title="Swap">Swap</div>
-        <div id="__PSZY_MOVETO__" class="btn btn-primary" title="Move to">MoveTo</div>
-        <div id="__PSZY_PBANK__" class="btn btn-inverse" title="open problem bank">${PSZYIcons.info}</div>
+        <div id="__PSZY_MOVEUP__" class="btn btn-primary btn-toolbar" title="Move 1 up">${PSZYIcons.moveUp}</div>
+        <div id="__PSZY_MOVEDOWN__" class="btn btn-primary btn-toolbar" title="Move 1 down">${PSZYIcons.moveDown}</div>
+        <div id="__PSZY_TOP__" class="btn btn-primary btn-toolbar" title="Send to top">${PSZYIcons.sendToTop}</div>
+        <div id="__PSZY_BOTTOM__" class="btn btn-primary btn-toolbar" title="Send to bottom">${PSZYIcons.sendToBottom}</div>
+        <div id="__PSZY_SWAP__" class="btn btn-primary btn-toolbar" title="Swap">Swap</div>
+        <div id="__PSZY_MOVETO__" class="btn btn-primary btn-toolbar" title="Move to">MoveTo</div>
+        <div id="__PSZY_PBANK__" class="btn btn-inverse btn-toolbar" title="open problem bank">${PSZYIcons.info}</div>
     </div>`
 
 	const lis = $('#sortable_nav > li')
 
 	lis.forEach((li) => (li.innerHTML += controls))
-	// document.body.innerHTML=iFrameForProblemBank+document.body.innerHTML
 	document.addEventListener('click', checkPSZYClicks, false)
-
-	var temp=0
 
 	function checkPSZYClicks(e) {
 		switch (e.target.id) {
@@ -547,7 +528,7 @@ if (checks()) {
 					b.checked = Number(accomo)
 				})
 				correctRanks()
-				console.log('imported')
+				console.log(`imported ${data.length} rows`)
 			})
 		})
 	}
