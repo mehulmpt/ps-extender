@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 function checks() {
 	if (location.hostname !== 'psd.bits-pilani.ac.in') {
 		alert('Only works on http://psd.bits-pilani.ac.in')
