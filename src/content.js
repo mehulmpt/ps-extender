@@ -197,14 +197,14 @@ if (checks()) {
 				</div>
 			</div>
 			<hr>
-			<div class="form-group">
+			<div class="form-group" style="display:none;">
 				<label class="col-md-4 control-label"></label>
 				<div class="col-md-4">
 					<input id="__PSZY_FETCHINFO__" type="button" value="Fetch Info" class="btn btn-primary">
 					<span>Warning: this will take a long time</span>
 				</div>
 			</div>
-			<hr>
+			<hr style="display:none;">
 		</form>
 		<div id="__PSZY_SCROLLTOTOP__" class="btn btn-primary btn-scroll-to-top" >${PSZYIcons.scrollToTop}</div>
 	</div>`
@@ -272,10 +272,13 @@ if (checks()) {
 				})
 				.then(response => response.json())
 				.then(data => {
-					const parsed = JSON.parse(data.d)[0]
-					window.open(`StationproblemBankDetails.aspx?CompanyId=${parsed.CompanyId}&StationId=${parsed.StationId}&BatchIdFor=${parsed.BatchIdFor}&PSTypeFor=${parsed.PSTypeFor}`, "_blank")
-				}).then(() => {
-					updateStationInfo(e.target.parentNode.parentNode)
+					const parsed = JSON.parse(data.d)
+					if (parsed.length > 0) {
+						const w = window.open(`StationproblemBankDetails.aspx?CompanyId=${parsed[0].CompanyId}&StationId=${parsed[0].StationId}&BatchIdFor=${parsed[0].BatchIdFor}&PSTypeFor=${parsed[0].PSTypeFor}`, "_blank")
+						w.onload = () => updateStationInfo(e.target.parentNode.parentNode).catch(e => console.error(e))
+					} else {
+						alert('No problem banks found')
+					}
 				})
 				break
 			}
@@ -285,11 +288,11 @@ if (checks()) {
 			case '__PSZY_DISCIPLINE__':
 				// updateStationInfo(e.target.parentNode.parentNode)
 				break
-			case '__PSZY_FETCHINFO__': {
-				const allNodes = getAllItems()
-				allNodes.forEach(n => updateStationInfo(n))
-				break
-			}
+			// case '__PSZY_FETCHINFO__': {
+			// 	const allNodes = getAllItems()
+			// 	allNodes.forEach(n => updateStationInfo(n))
+			// 	break
+			// }
 			case '__PSZY_EXPORT__':
 				exportCsv()
 				break
@@ -583,7 +586,7 @@ if (checks()) {
 	function updateStationInfo(node) {
 		const stid = node.querySelector('.spanclass.uiicon').attributes.spn.value
 		const fetchBody = { StationId: stid }
-		fetch("http://psd.bits-pilani.ac.in/Student/ViewActiveStationProblemBankData.aspx/getPBPOPUP", {
+		return fetch("http://psd.bits-pilani.ac.in/Student/ViewActiveStationProblemBankData.aspx/getPBPOPUP", {
 			headers: {
 				"accept": "application/json, text/javascript, */*; q=0.01",
 				"accept-language": "en-US,en;q=0.9",
@@ -602,10 +605,11 @@ if (checks()) {
 		})
 		.then(response => response.json())
 		.then(data => {
-			console.log()
-		const parsed = JSON.parse(data.d)[0]
+			const parsed = JSON.parse(data.d)
+			if (parsed.length === 0) throw new Error("No problem banks found for this station")
+			const current = parsed[0]
 			const response1 = fetch("http://psd.bits-pilani.ac.in/Student/StationproblemBankDetails.aspx/ViewPB", {
-			headers: {
+				headers: {
 					"accept": "application/json, text/javascript, */*; q=0.01",
 					"accept-language": "en-US,en;q=0.9",
 					"content-type": "application/json; charset=UTF-8",
@@ -613,16 +617,16 @@ if (checks()) {
 					"x-requested-with": "XMLHttpRequest",
 					"cache-control": "no-cache",
 					"pragma": "no-cache",
-			},
-			referrer: `http://psd.bits-pilani.ac.in/Student/StationproblemBankDetails.aspx?CompanyId=${parsed.CompanyId}&StationId=${parsed.StationId}&BatchIdFor=${parsed.BatchIdFor}&PSTypeFor=${parsed.PSTypeFor}`,
-			referrerPolicy: "strict-origin-when-cross-origin",
+				},
+				referrer: `http://psd.bits-pilani.ac.in/Student/StationproblemBankDetails.aspx?CompanyId=${current.CompanyId}&StationId=${current.StationId}&BatchIdFor=${current.BatchIdFor}&PSTypeFor=${current.PSTypeFor}`,
+				referrerPolicy: "strict-origin-when-cross-origin",
 				body: "{\"batchid\": \"undefined\" }",
-			method: "POST",
-			mode: "cors",
-			credentials: "include"
-		})
+				method: "POST",
+				mode: "cors",
+				credentials: "include"
+			})
 			const response2 = fetch("http://psd.bits-pilani.ac.in/Student/StationproblemBankDetails.aspx/StationFacilitiesInfo", {
-			headers: {
+				headers: {
 					"accept": "application/json, text/javascript, */*; q=0.01",
 					"accept-language": "en-US,en;q=0.9",
 					"content-type": "application/json; charset=UTF-8",
@@ -630,26 +634,26 @@ if (checks()) {
 					"x-requested-with": "XMLHttpRequest",
 					"cache-control": "no-cache",
 					"pragma": "no-cache",
-			},
-			referrer: `http://psd.bits-pilani.ac.in/Student/StationproblemBankDetails.aspx?CompanyId=${parsed.CompanyId}&StationId=${parsed.StationId}&BatchIdFor=${parsed.BatchIdFor}&PSTypeFor=${parsed.PSTypeFor}`,
-			referrerPolicy: "strict-origin-when-cross-origin",
+				},
+				referrer: `http://psd.bits-pilani.ac.in/Student/StationproblemBankDetails.aspx?CompanyId=${current.CompanyId}&StationId=${current.StationId}&BatchIdFor=${current.BatchIdFor}&PSTypeFor=${current.PSTypeFor}`,
+				referrerPolicy: "strict-origin-when-cross-origin",
 				body: "{\"StationId\": \"0\"}",
-			method: "POST",
-			mode: "cors",
-			credentials: "include"
-		})
+				method: "POST",
+				mode: "cors",
+				credentials: "include"
+			})
 			return Promise.all([response1, response2])
 		})
 		.then(([response1, response2]) => Promise.all([response1.json(), response2.json()]))
 		.then(([data1, data2]) => {
 			const parsed1 = JSON.parse(data1.d)
-		const parsed2 = JSON.parse(data2.d)[0]
-			totStudents = parsed1?.map(p => p.TotalReqdStudents).reduce((acc, val) => acc + val) ?? '-'
-			tags = parsed1?.map(p => p.Tags).join(',').replaceAll(' ', '').replaceAll('Any', '') || 'Any'
-		node.querySelector('#__PSZY_STIPEND__ span').innerText = parsed2?.Stipend ?? '-'
+			const parsed2 = JSON.parse(data2.d)[0]
+			const totStudents = parsed1?.map(p => p.TotalReqdStudents).reduce((acc, val) => acc + val) ?? '-'
+			const tags = parsed1?.map(p => p.Tags.replaceAll(' ', '').replaceAll('-', '').replaceAll('Any', '')).join(',')
+			node.querySelector('#__PSZY_STIPEND__ span').innerText = parsed2?.Stipend ?? '-'
 			node.querySelector('#__PSZY_STUDENTS__ span').innerText = totStudents
 			node.querySelector('#__PSZY_PROJECTS__ span').innerText = parsed1?.[0].TotalProject ?? '-'
-			node.querySelector('#__PSZY_DISCIPLINE__ span').innerText = Array.from(new Set(tags.split(','))).join(',')
+			node.querySelector('#__PSZY_DISCIPLINE__ span').innerText = Array.from(new Set(tags.split(','))).filter(x => !!x).join(',') || 'Any'
 		})
 	}
 }
