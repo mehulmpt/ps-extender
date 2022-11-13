@@ -1,8 +1,8 @@
 {
 	"manifest_version": 2,
-	"name": "Practice School Extender for BITS Pilani",
+	"name": "PS Extender Plus for BITS Pilani",
 	"version": "2.0.0",
-	"description": "Extends functionality of PSD interface by adding controls for swapping rows quickly using the generated tools by the script.",
+	"description": "Extends functionality of PSD interface by adding controls for sorting rows, backups, problem bank viewer",
 	"browser_action": {},
 	"icons": {
 		"32": "icon.png",
