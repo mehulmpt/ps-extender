@@ -1,0 +1,87 @@
+#__PSZY_INFO__,
+#__PSZY_CONTROLS__ {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  height: 24px;
+}
+
+#__PSZY_INFO__ {
+  justify-content: flex-start;
+  gap: 8px;
+  order: 2;
+}
+
+#__PSZY_CONTROLS__ {
+  justify-content: flex-end;
+  gap: 10px;
+  order: 5;
+}
+
+ul#sortable_nav>li {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+ul#sortable_nav>li .sortable-number {
+  flex: 0 0 auto;
+  order: 1;
+  margin-left: -60px;
+  float: none;
+}
+
+ul#sortable_nav>li .uiicon {
+  margin: 0px;
+  order: 3;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+ul#sortable_nav>li .spacer {
+  order: 4;
+}
+
+ul#sortable_nav>li input.accomo {
+  flex: 0 0 auto;
+  order: 6;
+  float: none;
+  margin: 0;
+  width: 24px;
+  height: 24px;
+}
+
+#sortable_nav>li:first-child div #__PSZY_MOVEUP__,
+#sortable_nav>li:first-child div #__PSZY_TOP__,
+#sortable_nav>li:last-child div #__PSZY_MOVEDOWN__,
+#sortable_nav>li:last-child div #__PSZY_BOTTOM__ {
+  visibility: hidden;
+}
+
+#sortable_nav>li:not(:hover) #__PSZY_CONTROLS__ {
+  display: none;
+}
+
+.fa-solid {
+  pointer-events: none;
+}
+
+@keyframes bg {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.glow {
+  animation: bg 0.4s linear;
+}

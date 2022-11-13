@@ -1,5 +1,9 @@
 // @ts-nocheck
 
+import styles from './assets/styles.css?raw'
+import globalControls from './templates/globalControls.html?raw'
+import itemControls from './templates/itemControls.html?raw'
+
 function checks() {
 	if (location.hostname !== 'psd.bits-pilani.ac.in') {
 		alert('Only works on http://psd.bits-pilani.ac.in')
@@ -26,216 +30,27 @@ function $(selector) {
 
 if (checks()) {
 
-	const PSZYIcons = {
-		sendToTop: '<svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M24 32h336c13.3 0 24 10.7 24 24v24c0 13.3-10.7 24-24 24H24C10.7 104 0 93.3 0 80V56c0-13.3 10.7-24 24-24zm232 424V320h87.7c17.8 0 26.7-21.5 14.1-34.1L205.7 133.7c-7.5-7.5-19.8-7.5-27.3 0L26.1 285.9C13.5 298.5 22.5 320 40.3 320H128v136c0 13.3 10.7 24 24 24h80c13.3 0 24-10.7 24-24z"></path></svg>',
-		sendToBottom: '<svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M360 480H24c-13.3 0-24-10.7-24-24v-24c0-13.3 10.7-24 24-24h336c13.3 0 24 10.7 24 24v24c0 13.3-10.7 24-24 24zM128 56v136H40.3c-17.8 0-26.7 21.5-14.1 34.1l152.2 152.2c7.5 7.5 19.8 7.5 27.3 0l152.2-152.2c12.6-12.6 3.7-34.1-14.1-34.1H256V56c0-13.3-10.7-24-24-24h-80c-13.3 0-24 10.7-24 24z"></path></svg>',
-		moveUp: '<svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" ><path fill="currentColor" d="M34.9 289.5l-22.2-22.2c-9.4-9.4-9.4-24.6 0-33.9L207 39c9.4-9.4 24.6-9.4 33.9 0l194.3 194.3c9.4 9.4 9.4 24.6 0 33.9L413 289.4c-9.5 9.5-25 9.3-34.3-.4L264 168.6V456c0 13.3-10.7 24-24 24h-32c-13.3 0-24-10.7-24-24V168.6L69.2 289.1c-9.3 9.8-24.8 10-34.3.4z"></path></svg>',
-		moveDown: '<svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M413.1 222.5l22.2 22.2c9.4 9.4 9.4 24.6 0 33.9L241 473c-9.4 9.4-24.6 9.4-33.9 0L12.7 278.6c-9.4-9.4-9.4-24.6 0-33.9l22.2-22.2c9.5-9.5 25-9.3 34.3.4L184 343.4V56c0-13.3 10.7-24 24-24h32c13.3 0 24 10.7 24 24v287.4l114.8-120.5c9.3-9.8 24.8-10 34.3-.4z"></path></svg>',
-		info: '<svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 512"><path fill="currentColor" d="M20 424.229h20V279.771H20c-11.046 0-20-8.954-20-20V212c0-11.046 8.954-20 20-20h112c11.046 0 20 8.954 20 20v212.229h20c11.046 0 20 8.954 20 20V492c0 11.046-8.954 20-20 20H20c-11.046 0-20-8.954-20-20v-47.771c0-11.046 8.954-20 20-20zM96 0C56.235 0 24 32.235 24 72s32.235 72 72 72 72-32.235 72-72S135.764 0 96 0z"></path></svg>',
-		scrollToTop: '<svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M201.4 137.4c12.5-12.5 32.8-12.5 45.3 0l160 160c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L224 205.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l160-160z"></path></svg>',
-		rupee: '<svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M0 64C0 46.3 14.3 32 32 32H96h16H288c17.7 0 32 14.3 32 32s-14.3 32-32 32H231.8c9.6 14.4 16.7 30.6 20.7 48H288c17.7 0 32 14.3 32 32s-14.3 32-32 32H252.4c-13.2 58.3-61.9 103.2-122.2 110.9L274.6 422c14.4 10.3 17.7 30.3 7.4 44.6s-30.3 17.7-44.6 7.4L13.4 314C2.1 306-2.7 291.5 1.5 278.2S18.1 256 32 256h80c32.8 0 61-19.7 73.3-48H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H185.3C173 115.7 144.8 96 112 96H96 32C14.3 96 0 81.7 0 64z"/></svg>',
-		students: '<svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path fill="currentColor" d="M144 160c-44.2 0-80-35.8-80-80S99.8 0 144 0s80 35.8 80 80s-35.8 80-80 80zm368 0c-44.2 0-80-35.8-80-80s35.8-80 80-80s80 35.8 80 80s-35.8 80-80 80zM0 298.7C0 239.8 47.8 192 106.7 192h42.7c15.9 0 31 3.5 44.6 9.7c-1.3 7.2-1.9 14.7-1.9 22.3c0 38.2 16.8 72.5 43.3 96c-.2 0-.4 0-.7 0H21.3C9.6 320 0 310.4 0 298.7zM405.3 320c-.2 0-.4 0-.7 0c26.6-23.5 43.3-57.8 43.3-96c0-7.6-.7-15-1.9-22.3c13.6-6.3 28.7-9.7 44.6-9.7h42.7C592.2 192 640 239.8 640 298.7c0 11.8-9.6 21.3-21.3 21.3H405.3zM416 224c0 53-43 96-96 96s-96-43-96-96s43-96 96-96s96 43 96 96zM128 485.3C128 411.7 187.7 352 261.3 352H378.7C452.3 352 512 411.7 512 485.3c0 14.7-11.9 26.7-26.7 26.7H154.7c-14.7 0-26.7-11.9-26.7-26.7z"/></svg>',
-		projects: '<svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M184 48H328c4.4 0 8 3.6 8 8V96H176V56c0-4.4 3.6-8 8-8zm-56 8V96H64C28.7 96 0 124.7 0 160v96H192 320 512V160c0-35.3-28.7-64-64-64H384V56c0-30.9-25.1-56-56-56H184c-30.9 0-56 25.1-56 56zM512 288H320v32c0 17.7-14.3 32-32 32H224c-17.7 0-32-14.3-32-32V288H0V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V288z"/></svg>',
-		discipline: '<svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path fill="currentColor" d="M175 389.4c-9.8 16-15 34.3-15 53.1c-10 3.5-20.8 5.5-32 5.5c-53 0-96-43-96-96V64C14.3 64 0 49.7 0 32S14.3 0 32 0H96h64 64c17.7 0 32 14.3 32 32s-14.3 32-32 32V309.9l-49 79.6zM96 64v96h64V64H96zM352 0H480h32c17.7 0 32 14.3 32 32s-14.3 32-32 32V214.9L629.7 406.2c6.7 10.9 10.3 23.5 10.3 36.4c0 38.3-31.1 69.4-69.4 69.4H261.4c-38.3 0-69.4-31.1-69.4-69.4c0-12.8 3.6-25.4 10.3-36.4L320 214.9V64c-17.7 0-32-14.3-32-32s14.3-32 32-32h32zm32 64V224c0 5.9-1.6 11.7-4.7 16.8L330.5 320h171l-48.8-79.2c-3.1-5-4.7-10.8-4.7-16.8V64H384z"/></svg>',
-	}
-
-	const styles = `
-		#__PSZY_INFO__,
-		#__PSZY_CONTROLS__ {
-			flex: 0 0 auto;
-			display: flex;
-			align-items: center;
-			height: 24px;
-		}
-
-		#__PSZY_INFO__ {
-			justify-content: flex-start;
-			gap: 8px;
-			order: 2;
-		}
-
-		#__PSZY_CONTROLS__ {
-			justify-content: flex-end;
-			gap: 10px;
-			order: 5;
-		}
-
-		ul#sortable_nav>li {
-			display: flex;
-			gap: 15px;
-            align-items: center;
-		}
-
-		ul#sortable_nav>li .sortable-number {
-			flex: 0 0 auto;
-			order: 1;
-			margin-left: -60px;
-			float: none;
-		}
-
-		ul#sortable_nav>li .uiicon {
-			margin: 0px;
-			order: 3;
-		}
-
-		.spacer {
-			flex: 1 1 auto;
-		}
-
-		ul#sortable_nav>li .spacer {
-			order: 4;
-		}
-
-		ul#sortable_nav>li input.accomo {
-			flex: 0 0 auto;
-			order: 6;
-			float: none;
-			margin: 0;
-			width: 24px;
-			height: 24px;
-		}
-
-        #sortable_nav>li:first-child div #__PSZY_MOVEUP__ ,
-        #sortable_nav>li:first-child div #__PSZY_TOP__ ,
-        #sortable_nav>li:last-child div #__PSZY_MOVEDOWN__ ,
-        #sortable_nav>li:last-child div #__PSZY_BOTTOM__ {
-            visibility: hidden;
-        }
-
-		#sortable_nav>li:not(:hover) #__PSZY_CONTROLS__{
-			display: none;
-		}
-
-        #__PSZY_INFO__ svg,
-        #__PSZY_CONTROLS__ svg,
-		#__PSZY_GLOBAL_CONTROLS__ svg {
-			display: inline;
-			pointer-events: none;
-            width: 1em;
-            height: 1em;
-        }
-
-        @keyframes bg {
-            0% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.5;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-
-        .glow {
-            animation: bg 0.4s linear;
-        }
-    `
-
-	const styleTag = document.createElement('style')
-	styleTag.innerHTML = styles
-
 	window.__PSZYSET__ = true
+	
+	// add styles
+	document.head.innerHTML +=`
+	<style>${styles}</style>
+	<link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.2.0/css/all.css">
+	`
 
 	// disable default sorting library
 	const script = document.createElement('script')
 	script.innerHTML = `$('#sortable_nav').sortable('destroy'); $('#sortable_nav').enableSelection();`
 	document.head.appendChild(script)
 
-	// add styles
-	document.head.appendChild(styleTag)
-
-	// global controls
-	const globalControls = `
-	<div id="__PSZY_GLOBAL_CONTROLS__">
-		<form class="form-horizontal">
-			<hr>
-			<div class="form-group">
-				<label class="col-md-4 control-label">Backup</label>
-				<div class="col-md-4">
-					<input id="__PSZY_EXPORT__" type="button" value="Export" class="btn btn-primary">
-					<input id="__PSZY_IMPORT__" type="button" value="Import" class="btn btn-inverse">
-					<input id="__PSZY_FILE__" type="file" accept=".csv,text/csv" style="display: none" />
-				</div>
-			</div>
-			<hr>
-			<div class="form-group">
-				<label class="col-md-4 control-label">Select Range</label>
-				<div class="col-md-4">
-					<input id="__PSZY_RANGE__" class="form-control" type="search" placeholder="0-10,14-18,20,25">
-				</div>
-				<div class="col-md-4">
-					<input id="__PSZY_SELECTRANGE__" type="button" value="Select" class="btn btn-primary">
-					<input id="__PSZY_DESELECTRANGE__" type="button" value="Deselect" class="btn btn-inverse">
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-md-4 control-label">Select Pattern</label>
-				<div class="col-md-4">
-					<input id="__PSZY_PATTERN__" class="form-control" type="search" placeholder="IT|Bengaluru (regex)">
-				</div>
-				<div class="col-md-4">
-					<input id="__PSZY_SELECTPATTERN__" type="button" value="Select" class="btn btn-primary">
-					<input id="__PSZY_DESELECTPATTERN__" type="button" value="Deselect" class="btn btn-inverse">
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-md-4 control-label"></label>
-				<div class="col-md-4">
-					<input id="__PSZY_DESELECTALL__" type="button" value="Deselect All" class="btn btn-inverse">
-					<span><span id="__PSZY_SELECTEDCOUNT__" >0</span> selected</span>
-				</div>
-			</div>
-			<hr>
-			<div class="form-group">
-				<label class="col-md-4 control-label">Move selected to preference#</label>
-				<div class="col-md-4">
-					<input id="__PSZY_PREFNO__" class="form-control" type="number" value="1" min="1">
-				</div>
-				<div class="col-md-4">
-					<input id="__PSZY_MOVESELECTED__" type="button" value="Move" class="btn btn-primary">
-					<input id="__PSZY_MOVESELECTEDTOP__" type="button" value="Top" class="btn btn-inverse">
-					<input id="__PSZY_MOVESELECTEDBOTTOM__" type="button" value="Bottom" class="btn btn-inverse">
-				</div>
-			</div>
-			<hr>
-			<div class="form-group" style="display:none;">
-				<label class="col-md-4 control-label"></label>
-				<div class="col-md-4">
-					<input id="__PSZY_FETCHINFO__" type="button" value="Fetch Info" class="btn btn-primary">
-					<span>Warning: this will take a long time</span>
-				</div>
-			</div>
-			<hr style="display:none;">
-		</form>
-		<div id="__PSZY_SCROLLTOTOP__" class="btn btn-primary btn-scroll-to-top" >${PSZYIcons.scrollToTop}</div>
-	</div>`
-
+	// add global controls
 	const divider = $('#rptlist > .hr.hr-dotted')
 	divider.outerHTML = globalControls + divider.outerHTML
 
-	// add controls
-	const controls = `
-	<div id="__PSZY_INFO__">
-		<div id="__PSZY_STIPEND__" title="Stipend" class="btn btn-white btn-toolbar btn-xs">${PSZYIcons.rupee} <span>-</span></div>
-		<div id="__PSZY_STUDENTS__" title="#students" class="btn btn-white btn-toolbar btn-xs">${PSZYIcons.students} <span>-</span></div>
-		<div id="__PSZY_PROJECTS__" title="#projects" class="btn btn-white btn-toolbar btn-xs">${PSZYIcons.projects} <span>-</span></div>
-		<div id="__PSZY_DISCIPLINE__" title="disciplines" class="btn btn-white btn-toolbar btn-xs">${PSZYIcons.discipline} <span>-</span></div>
-	</div>
-	<div class="spacer">&nbsp;</div>
-	<div id="__PSZY_CONTROLS__">
-		<div id="__PSZY_MOVEUP__" class="btn btn-primary btn-toolbar" title="Move 1 up">${PSZYIcons.moveUp}</div>
-		<div id="__PSZY_MOVEDOWN__" class="btn btn-primary btn-toolbar" title="Move 1 down">${PSZYIcons.moveDown}</div>
-		<div id="__PSZY_TOP__" class="btn btn-primary btn-toolbar" title="Send to top">${PSZYIcons.sendToTop}</div>
-		<div id="__PSZY_BOTTOM__" class="btn btn-primary btn-toolbar" title="Send to bottom">${PSZYIcons.sendToBottom}</div>
-		<div id="__PSZY_SWAP__" class="btn btn-primary btn-toolbar" title="Swap">${PSZYIcons.sendToBottom}<span>Swap</span></div>
-		<div id="__PSZY_MOVETO__" class="btn btn-primary btn-toolbar" title="Move to">MoveTo</div>
-		<div id="__PSZY_PBANK__" class="btn btn-inverse btn-toolbar" title="open problem bank">${PSZYIcons.info}</div>
-	</div>`
-
+	// add item controls
 	const lis = $('#sortable_nav > li')
-
-	lis.forEach((li) => (li.innerHTML += controls))
+	lis.forEach((li) => (li.innerHTML += itemControls))
+	
 	document.addEventListener('click', checkPSZYClicks, false)
 
 	function checkPSZYClicks(e) {

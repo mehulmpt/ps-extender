@@ -1,0 +1,63 @@
+<div id="__PSZY_GLOBAL_CONTROLS__">
+  <form class="form-horizontal">
+    <hr>
+    <div class="form-group">
+      <label class="col-md-4 control-label">Backup</label>
+      <div class="col-md-4">
+        <input id="__PSZY_EXPORT__" type="button" value="Export" class="btn btn-primary">
+        <input id="__PSZY_IMPORT__" type="button" value="Import" class="btn btn-inverse">
+        <input id="__PSZY_FILE__" type="file" accept=".csv,text/csv" style="display: none" />
+      </div>
+    </div>
+    <hr>
+    <div class="form-group">
+      <label class="col-md-4 control-label">Select Range</label>
+      <div class="col-md-4">
+        <input id="__PSZY_RANGE__" class="form-control" type="search" placeholder="0-10,14-18,20,25">
+      </div>
+      <div class="col-md-4">
+        <input id="__PSZY_SELECTRANGE__" type="button" value="Select" class="btn btn-primary">
+        <input id="__PSZY_DESELECTRANGE__" type="button" value="Deselect" class="btn btn-inverse">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-md-4 control-label">Select Pattern</label>
+      <div class="col-md-4">
+        <input id="__PSZY_PATTERN__" class="form-control" type="search" placeholder="IT|Bengaluru (regex)">
+      </div>
+      <div class="col-md-4">
+        <input id="__PSZY_SELECTPATTERN__" type="button" value="Select" class="btn btn-primary">
+        <input id="__PSZY_DESELECTPATTERN__" type="button" value="Deselect" class="btn btn-inverse">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-md-4 control-label"></label>
+      <div class="col-md-4">
+        <input id="__PSZY_DESELECTALL__" type="button" value="Deselect All" class="btn btn-inverse">
+        <span><span id="__PSZY_SELECTEDCOUNT__">0</span> selected</span>
+      </div>
+    </div>
+    <hr>
+    <div class="form-group">
+      <label class="col-md-4 control-label">Move selected to preference#</label>
+      <div class="col-md-4">
+        <input id="__PSZY_PREFNO__" class="form-control" type="number" value="1" min="1">
+      </div>
+      <div class="col-md-4">
+        <input id="__PSZY_MOVESELECTED__" type="button" value="Move" class="btn btn-primary">
+        <input id="__PSZY_MOVESELECTEDTOP__" type="button" value="Top" class="btn btn-inverse">
+        <input id="__PSZY_MOVESELECTEDBOTTOM__" type="button" value="Bottom" class="btn btn-inverse">
+      </div>
+    </div>
+    <hr>
+    <div class="form-group" style="display:none;">
+      <label class="col-md-4 control-label"></label>
+      <div class="col-md-4">
+        <input id="__PSZY_FETCHINFO__" type="button" value="Fetch Info" class="btn btn-primary">
+        <span>Warning: this will take a long time</span>
+      </div>
+    </div>
+    <hr style="display:none;">
+  </form>
+  <div id="__PSZY_SCROLLTOTOP__" class="btn btn-primary btn-scroll-to-top"><i class="fa-solid fa-chevron-up"></i></div>
+</div>
