@@ -263,7 +263,7 @@ export function importCsv() {
   })
 }
 
-export function viewProblemBank(node) {
+export function viewProblemBank(node, { openInBackground = false } = {}) {
   let stid = node.querySelector('.spanclass.uiicon').attributes.spn.value
   let fetchBody = { StationId: stid }
   fetch("http://psd.bits-pilani.ac.in/Student/ViewActiveStationProblemBankData.aspx/getPBPOPUP", {
@@ -281,8 +281,15 @@ export function viewProblemBank(node) {
     .then(data => {
       const parsed = JSON.parse(data.d)
       if (parsed.length > 0) {
-        const w = window.open(`StationproblemBankDetails.aspx?CompanyId=${parsed[0].CompanyId}&StationId=${parsed[0].StationId}&BatchIdFor=${parsed[0].BatchIdFor}&PSTypeFor=${parsed[0].PSTypeFor}`, "_blank")
-        w.onload = () => updateStationInfo(node).catch(e => console.error(e))
+        const url = `StationproblemBankDetails.aspx?CompanyId=${parsed[0].CompanyId}&StationId=${parsed[0].StationId}&BatchIdFor=${parsed[0].BatchIdFor}&PSTypeFor=${parsed[0].PSTypeFor}`
+        if (openInBackground) {
+          const iframe = $('#__PSZY_BGFRAME__') as HTMLIFrameElement
+          iframe.src = url
+          iframe.contentWindow.onload = updateStationInfo(node).catch(e => console.error(e))
+        } else {
+          const w = window.open(url, "_blank")
+          w.onload = () => updateStationInfo(node).catch(e => console.error(e))
+        }
       } else {
         alert('No problem banks found')
       }

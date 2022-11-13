@@ -86,13 +86,13 @@ if (checks()) {
 				moveto(e.target.parentNode.parentNode)
 				break
 			case '__PSZY_PBANK__':
-				viewProblemBank(e.target.parentNode.parentNode)
+				viewProblemBank(e.target.parentNode.parentNode, { openInBackground: false })
 				break
 			case '__PSZY_STIPEND__':
 			case '__PSZY_STUDENTS__':
 			case '__PSZY_PROJECTS__':
 			case '__PSZY_DISCIPLINE__':
-				// updateStationInfo(e.target.parentNode.parentNode)
+				viewProblemBank(e.target.parentNode.parentNode, { openInBackground: true })
 				break
 			// case '__PSZY_FETCHINFO__': {
 			// 	const allNodes = getAllItems()
