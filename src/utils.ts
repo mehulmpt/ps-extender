@@ -208,11 +208,17 @@ export function correctRanks() {
 
 export function exportCsv() {
   const list = getAllItems()
-  const data = [['ID', 'NAME', 'ACCOMO']]
+  const data = [['ID', 'NAME', 'ACCOMO', 'STIPEND', 'STUDENTS', 'PROJECTS', 'DISCIPLINES', 'NOTES']]
   list.forEach(n => {
-    const a = n.querySelector('span.spanclass')
-    const b = n.querySelector('input[type="checkbox"]')
-    data.push([a.getAttribute('spn'), encodeURIComponent(a.innerText), Number(b.checked)])
+    const id = n.querySelector('span.spanclass').getAttribute('spn')
+    const name = encodeURIComponent(n.querySelector('span.spanclass').innerText)
+    const accomo = Number(n.querySelector('input[type="checkbox"]').checked)
+    const stipend = n.querySelector('#__PSZY_STIPEND__ span').innerText
+    const students = n.querySelector('#__PSZY_STUDENTS__ span').innerText
+    const projects = n.querySelector('#__PSZY_PROJECTS__ span').innerText
+    const discipline = encodeURIComponent(n.querySelector('#__PSZY_DISCIPLINE__ span').innerText)
+    const notes = ''
+    data.push([id, name, accomo, stipend, students, projects, discipline, notes])
   })
   const blob = new Blob([data.map(row => row.join(',')).join('\n')], { type: 'text/html', endings: 'native' })
   const url = URL.createObjectURL(blob)
@@ -233,18 +239,22 @@ export function importCsv() {
   picker.addEventListener('change', () => {
     picker.files?.[0]?.text().then(text => {
       const list = getAllItems()
-      if (!text.startsWith('ID,NAME,ACCOMO')) return alert('Bad File')
+      if (!text.startsWith('ID,NAME,ACCOMO,STIPEND,STUDENTS,PROJECTS,DISCIPLINES,NOTES')) return alert('Bad File')
       const data = text.trim().split('\n').map(s => s.trim().split(','))
       data.shift() // remove header
       data.forEach((r, i) => {
         const a = list[i].querySelector('span.spanclass')
         const b = list[i].querySelector('input[type="checkbox"]')
-        const [id, name, accomo] = r
+        const [id, name, accomo, stipend, students, projects, discipline, notes] = r
         const nameText = decodeURIComponent(name)
         a.setAttribute('spn', id)
         a.setAttribute('cname', nameText)
         a.innerText = nameText
         b.checked = Number(accomo)
+        list[i].querySelector('#__PSZY_STIPEND__ span').innerText = stipend
+        list[i].querySelector('#__PSZY_STUDENTS__ span').innerText = students
+        list[i].querySelector('#__PSZY_PROJECTS__ span').innerText = projects
+        list[i].querySelector('#__PSZY_DISCIPLINE__ span').innerText = decodeURIComponent(discipline)
       })
       correctRanks()
       console.info(`imported ${data.length} rows`)
