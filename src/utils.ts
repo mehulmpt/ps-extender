@@ -263,6 +263,32 @@ export function importCsv() {
   })
 }
 
+export function viewProblemBank(node) {
+  let stid = node.querySelector('.spanclass.uiicon').attributes.spn.value
+  let fetchBody = { StationId: stid }
+  fetch("http://psd.bits-pilani.ac.in/Student/ViewActiveStationProblemBankData.aspx/getPBPOPUP", {
+    headers: {
+      "content-type": "application/json; charset=UTF-8",
+    },
+    referrer: "http://psd.bits-pilani.ac.in/Student/ViewActiveStationProblemBankData.aspx",
+    referrerPolicy: "strict-origin-when-cross-origin",
+    body: JSON.stringify(fetchBody),
+    method: "POST",
+    mode: "cors",
+    credentials: "include"
+  })
+    .then(response => response.json())
+    .then(data => {
+      const parsed = JSON.parse(data.d)
+      if (parsed.length > 0) {
+        const w = window.open(`StationproblemBankDetails.aspx?CompanyId=${parsed[0].CompanyId}&StationId=${parsed[0].StationId}&BatchIdFor=${parsed[0].BatchIdFor}&PSTypeFor=${parsed[0].PSTypeFor}`, "_blank")
+        w.onload = () => updateStationInfo(node).catch(e => console.error(e))
+      } else {
+        alert('No problem banks found')
+      }
+    })
+}
+
 export function updateStationInfo(node) {
   const stid = node.querySelector('.spanclass.uiicon').attributes.spn.value
   const fetchBody = { StationId: stid }

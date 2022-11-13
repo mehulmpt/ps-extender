@@ -3,7 +3,7 @@
 import styles from './assets/styles.css?raw'
 import globalControls from './templates/globalControls.html?raw'
 import itemControls from './templates/itemControls.html?raw'
-import { $, moveup, movedown, movetotop, movetobottom, moveswap, moveto, exportCsv, importCsv, selectRange, deselectRange, selectPattern, deselectPattern, deselectAll, moveselectedto, moveselectedtop, moveselectedbottom, selectNode, updateStationInfo } from './utils'
+import { $, moveup, movedown, movetotop, movetobottom, moveswap, moveto, exportCsv, importCsv, selectRange, deselectRange, selectPattern, deselectPattern, deselectAll, moveselectedto, moveselectedtop, moveselectedbottom, selectNode, viewProblemBank } from './utils'
 
 function checks() {
 	if (location.hostname !== 'psd.bits-pilani.ac.in') {
@@ -85,32 +85,9 @@ if (checks()) {
 			case '__PSZY_MOVETO__':
 				moveto(e.target.parentNode.parentNode)
 				break
-			case '__PSZY_PBANK__': {
-				let stid = e.target.parentNode.parentNode.querySelector('.spanclass.uiicon').attributes.spn.value
-				let fetchBody = { StationId: stid }
-				fetch("http://psd.bits-pilani.ac.in/Student/ViewActiveStationProblemBankData.aspx/getPBPOPUP", {
-					headers: {
-						"content-type": "application/json; charset=UTF-8",
-					},
-					referrer: "http://psd.bits-pilani.ac.in/Student/ViewActiveStationProblemBankData.aspx",
-					referrerPolicy: "strict-origin-when-cross-origin",
-					body: JSON.stringify(fetchBody),
-					method: "POST",
-					mode: "cors",
-					credentials: "include"
-				})
-					.then(response => response.json())
-					.then(data => {
-						const parsed = JSON.parse(data.d)
-						if (parsed.length > 0) {
-							const w = window.open(`StationproblemBankDetails.aspx?CompanyId=${parsed[0].CompanyId}&StationId=${parsed[0].StationId}&BatchIdFor=${parsed[0].BatchIdFor}&PSTypeFor=${parsed[0].PSTypeFor}`, "_blank")
-							w.onload = () => updateStationInfo(e.target.parentNode.parentNode).catch(e => console.error(e))
-						} else {
-							alert('No problem banks found')
-						}
-					})
+			case '__PSZY_PBANK__':
+				viewProblemBank(e.target.parentNode.parentNode)
 				break
-			}
 			case '__PSZY_STIPEND__':
 			case '__PSZY_STUDENTS__':
 			case '__PSZY_PROJECTS__':
