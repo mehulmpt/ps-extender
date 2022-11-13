@@ -1,6 +1,6 @@
 <div align="center">
     <a href="http://psd.bits-pilani.ac.in/">
-        <img src="./src/icon.png" alt="BITS Pilani" width="120" height="120" />
+        <img src="./public/icon.png" alt="BITS Pilani" width="120" height="120" />
     </a>
     <br /><br />
     <h1><code>PSD Extender Plus</code></h1>
@@ -29,7 +29,7 @@
 
 The easiest way to use this is to install is using webstore [here](http://bit.ly/ps-extender). For some reason, if you want to set it up manually:
 
-1. Download the latest version from [Releases](https://github.com/aryan02420/ps-extender/releases)
+1. Download the latest version of `PSExtenderPlus.zip` from [Releases](https://github.com/aryan02420/ps-extender/releases)
 1. Unzip this folder
 1. Type [`chrome://extensions/`](chrome://extensions/) in your URL
 1. Enable Developer Mode (top-right)
