@@ -51,6 +51,16 @@ if (checks()) {
 
 	function checkPSZYClicks(e) {
 		switch (e.target.id) {
+			case '__PSZY_ADDNOTE__': {
+				const note = e.target.parentNode.parentNode.querySelector('#__PSZY_NOTE__')
+				if (note.innerText.length === 0)
+					note.innerText = 'Edit me'
+				note.focus()
+				break
+			}
+			case '__PSZY_NOTE__':
+				// ignore click
+				break
 			case '__PSZY_MOVEUP__':
 				moveup(e.target.parentNode.parentNode)
 				break
