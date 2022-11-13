@@ -21,6 +21,8 @@
 
 👉 Backup your preferences
 
+👉 Add notes
+
 👉 Removes the default jQuery implementation on the website
 
 ![Screenshot of the preference page with this extension enabled](.github/images/screenshot.png)
