@@ -217,7 +217,7 @@ export function exportCsv() {
     const students = n.querySelector('#__PSZY_STUDENTS__ span').innerText
     const projects = n.querySelector('#__PSZY_PROJECTS__ span').innerText
     const discipline = encodeURIComponent(n.querySelector('#__PSZY_DISCIPLINE__ span').innerText)
-    const notes = ''
+    const notes = encodeURIComponent(n.querySelector('#__PSZY_NOTE__').innerText)
     data.push([id, name, accomo, stipend, students, projects, discipline, notes])
   })
   const blob = new Blob([data.map(row => row.join(',')).join('\n')], { type: 'text/html', endings: 'native' })
@@ -255,6 +255,7 @@ export function importCsv() {
         list[i].querySelector('#__PSZY_STUDENTS__ span').innerText = students
         list[i].querySelector('#__PSZY_PROJECTS__ span').innerText = projects
         list[i].querySelector('#__PSZY_DISCIPLINE__ span').innerText = decodeURIComponent(discipline)
+        list[i].querySelector('#__PSZY_NOTE__').innerText = decodeURIComponent(notes)
       })
       correctRanks()
       console.info(`imported ${data.length} rows`)
