@@ -1,0 +1,25 @@
+name: Create Archive
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 16
+        cache: 'npm'
+
+    - name: install dependencies
+      run: npm ci
+
+    - name: build extension
+      run: npm run build
+      
+    - name: Archive Release
+      uses: thedoctor0/zip-release@main
+      with:
+        type: 'zip'
+        path: 'dist'
+        filename: 'PSExtenderPlus.zip'
