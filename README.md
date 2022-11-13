@@ -11,13 +11,13 @@
 
 </div>
 
-<p>This extension:</p>
+## Features
 
 👉 Adds controls for swapping PS station
 
 👉 Select and move multiple stations
 
-👉 Adds button to view problem bank, which automatically adds all the relevent information to the row
+👉 Adds button to view problem bank, which automatically adds all relevent information to the row
 
 👉 Backup your preferences
 
@@ -40,6 +40,17 @@ The easiest way to use this is to install is using webstore [here](http://bit.ly
 1. Visit/Refresh your PSD page and click on the extension icon in your toolbar
 1. You should now see an interface with the controls
 
+## Setup
+
+- run `npm install` to install dependencies
+- uses Vite in library mode to bundle extension
+- `public/` + compiled source code is output to `dist/` folder
+- run `npm run build` to build once
+- run `npm run build -- --watch` to watch for changes and build automatically
+
 ## 🚀 Contributing
 
 PRs are welcome and in fact, appreciated :)
+
+- Check open Issues and PRs before you start
+- Try to take up each issue in a separate PR
