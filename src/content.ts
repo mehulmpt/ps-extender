@@ -53,9 +53,15 @@ if (checks()) {
 		switch (e.target.id) {
 			case '__PSZY_ADDNOTE__': {
 				const note = e.target.parentNode.parentNode.querySelector('#__PSZY_NOTE__')
-				if (note.innerText.length === 0)
-					note.innerText = 'Edit me'
 				note.focus()
+				if (note.innerText.length > 0) break
+				note.innerText = 'Edit me'
+				// select text
+				const range = document.createRange();
+				range.selectNodeContents(note);
+				const sel = window.getSelection();
+				sel.removeAllRanges();
+				sel.addRange(range);
 				break
 			}
 			case '__PSZY_NOTE__':
