@@ -16,10 +16,20 @@ jobs:
 
     - name: build extension
       run: npm run build
-      
-    - name: Archive Release
+
+    - name: generate archive
       uses: thedoctor0/zip-release@main
       with:
         type: 'zip'
         path: 'dist'
         filename: 'PSExtenderPlus.zip'
+
+    - name: create release
+      uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: latest
+          prerelease: true
+          title: Development Build
+          files: |
+            PSExtenderPlus.zip
