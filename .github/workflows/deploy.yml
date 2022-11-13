@@ -1,8 +1,6 @@
 name: Zip and deploy to webstore
 on:
-    push:
-        branches:
-            - 'master'
+    workflow_dispatch:
 jobs:
     zip_and_deploy:
         runs-on: ubuntu-latest
