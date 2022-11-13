@@ -121,8 +121,12 @@ ul#sortable_nav>li input.accomo {
   z-index: 3;
 }
 
-/* allow clicks on icon */
-.fa-solid {
+/* ignore click events */
+.fa-solid,
+#__PSZY_STIPEND__ *,
+#__PSZY_STUDENTS__ *,
+#__PSZY_PROJECTS__ *,
+#__PSZY_DISCIPLINE__ * {
   pointer-events: none;
 }
 
