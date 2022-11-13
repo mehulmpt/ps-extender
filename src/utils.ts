@@ -285,10 +285,10 @@ export function viewProblemBank(node, { openInBackground = false } = {}) {
         if (openInBackground) {
           const iframe = $('#__PSZY_BGFRAME__') as HTMLIFrameElement
           iframe.src = url
-          iframe.contentWindow.onload = updateStationInfo(node).catch(e => console.error(e))
+          iframe.contentWindow.onload = setTimeout(() => { updateStationInfo(node).catch(e => console.error(e)) }, 100)
         } else {
           const w = window.open(url, "_blank")
-          w.onload = () => updateStationInfo(node).catch(e => console.error(e))
+          w.onload = () => setTimeout(() => { updateStationInfo(node).catch(e => console.error(e)) }, 100)
         }
       } else {
         alert('No problem banks found')
