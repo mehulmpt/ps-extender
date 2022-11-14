@@ -45,8 +45,9 @@ The easiest way to use this is to install is using webstore [here](http://bit.ly
 - run `npm install` to install dependencies
 - uses Vite in library mode to bundle extension
 - `public/` + compiled source code is output to `dist/` folder
-- run `npm run build` to build once
-- run `npm run build -- --watch` to watch for changes and build automatically
+- run `npm run build` to build once. refresh browser and rerun extension.
+- run `npm run build:watch` to watch for changes and build automatically. refresh and rerun.
+- run `npm run dev` to test the extension on a local copy of the page (no need to install the extension). Auto-reloads
 
 ## 🚀 Contributing
 
