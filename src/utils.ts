@@ -231,34 +231,54 @@ export function exportCsv() {
   URL.revokeObjectURL(url)
 }
 
+// read csv line by line
+// find station id in pref list
+// update row
+// add row to doc fragment
+// new stations remain in list
+// add fragment to top of list
 export function importCsv() {
-  const confirmed = confirm('WARNING: not tested when csv file becomes stale.\nClick OK to continue (unsafe).')
-  if (!confirmed) return
   const picker = $('#__PSZY_FILE__')
   picker.click()
   picker.addEventListener('change', () => {
     picker.files?.[0]?.text().then(text => {
-      const list = getAllItems()
       if (!text.startsWith('ID,NAME,ACCOMO,STIPEND,STUDENTS,PROJECTS,DISCIPLINES,NOTES')) return alert('Bad File')
+      // temp store pref in fragment
+      const fragment = document.createDocumentFragment();
+      const stats = {
+        restored: 0,
+        added: 0,
+        deleted: 0,
+      }
       const data = text.trim().split('\n').map(s => s.trim().split(','))
       data.shift() // remove header
-      data.forEach((r, i) => {
-        const a = list[i].querySelector('span.spanclass')
-        const b = list[i].querySelector('input[type="checkbox"]')
-        const [id, name, accomo, stipend, students, projects, discipline, notes] = r
-        const nameText = decodeURIComponent(name)
-        a.setAttribute('spn', id)
-        a.setAttribute('cname', nameText)
-        a.innerText = nameText
-        b.checked = Number(accomo)
-        list[i].querySelector('#__PSZY_STIPEND__ span').innerText = stipend
-        list[i].querySelector('#__PSZY_STUDENTS__ span').innerText = students
-        list[i].querySelector('#__PSZY_PROJECTS__ span').innerText = projects
-        list[i].querySelector('#__PSZY_DISCIPLINE__ span').innerText = decodeURIComponent(discipline)
-        list[i].querySelector('#__PSZY_NOTE__').innerText = decodeURIComponent(notes)
+      data.forEach(row => {
+        const [id, name, accomo, stipend, students, projects, discipline, notes] = row
+        const node = $('#sortable_nav').querySelector(`span.spanclass[spn="${id}"]`)?.parentNode
+        if (!node) {
+          // station withdrawn
+          stats.deleted ++
+          return
+        }
+        node.querySelector('input[type="checkbox"]').checked = Number(accomo)
+        node.querySelector('#__PSZY_STIPEND__ span').innerText = stipend
+        node.querySelector('#__PSZY_STUDENTS__ span').innerText = students
+        node.querySelector('#__PSZY_PROJECTS__ span').innerText = projects
+        node.querySelector('#__PSZY_DISCIPLINE__ span').innerText = decodeURIComponent(discipline)
+        node.querySelector('#__PSZY_NOTE__').innerText = decodeURIComponent(notes)
+        stats.restored ++
+        fragment.appendChild(node)
       })
+      // stations remaining in list were added after backup
+      stats.added = $('#sortable_nav > li').length
+      // add back fragment to the top of this list
+      if (stats.added) {
+        $('#sortable_nav').insertBefore(fragment, $('#sortable_nav > li:first-child'))
+      } else {
+        $('#sortable_nav').appendChild(fragment)
+      }
       correctRanks()
-      console.info(`imported ${data.length} rows`)
+      alert(`imported ${data.length} rows, ${stats.restored} stations restored from backup, ${stats.added} added and ${stats.deleted} deleted since last visit`)
     })
   })
 }
