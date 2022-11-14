@@ -6,7 +6,7 @@ import itemControls from './templates/itemControls.html?raw'
 import { $, moveup, movedown, movetotop, movetobottom, moveswap, moveto, exportCsv, importCsv, selectRange, deselectRange, selectPattern, deselectPattern, deselectAll, moveselectedto, moveselectedtop, moveselectedbottom, selectNode, viewProblemBank } from './utils'
 
 function checks() {
-	if (location.hostname !== 'psd.bits-pilani.ac.in') {
+	if (!['psd.bits-pilani.ac.in', 'localhost', '127.0.0.1'].includes(location.hostname)) {
 		alert('Only works on http://psd.bits-pilani.ac.in')
 		return false
 	}

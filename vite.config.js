@@ -9,5 +9,5 @@ export default defineConfig({
       fileName: 'content',
       formats: ['es']
     },
-  }
+  },
 })
