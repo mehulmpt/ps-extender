@@ -25,7 +25,7 @@ jobs:
       with:
         type: 'zip'
         path: 'dist'
-        filename: 'PSExtenderPlus.zip'
+        filename: 'PSExtender.zip'
 
     - name: create release
       uses: marvinpinto/action-automatic-releases@latest
@@ -35,4 +35,4 @@ jobs:
         prerelease: true
         title: Development Build
         files: |
-          PSExtenderPlus.zip
+          PSExtender.zip

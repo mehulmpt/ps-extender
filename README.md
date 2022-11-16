@@ -3,11 +3,11 @@
         <img src="./public/icon.png" alt="BITS Pilani" width="120" height="120" />
     </a>
     <br /><br />
-    <h1><code>PSD Extender Plus</code></h1>
+    <h1><code>PSD Extender</code></h1>
     <h4>Extends functionality of PSD interface.</h4>
 
-![GitHub stars](https://img.shields.io/github/stars/aryan02420/ps-extender?style=social)
-![GitHub watchers](https://img.shields.io/github/watchers/aryan02420/ps-extender?label=Watch&style=social)
+![GitHub stars](https://img.shields.io/github/stars/mehulmpt/ps-extender?style=social)
+![GitHub watchers](https://img.shields.io/github/watchers/mehulmpt/ps-extender?label=Watch&style=social)
 
 </div>
 
@@ -31,7 +31,7 @@
 
 The easiest way to use this is to install is using webstore [here](http://bit.ly/ps-extender). For some reason, if you want to set it up manually:
 
-1. Download the latest version of `PSExtenderPlus.zip` from [Releases](https://github.com/aryan02420/ps-extender/releases)
+1. Download the latest version of `PSExtender.zip` from [Releases](https://github.com/mehulmpt/ps-extender/releases)
 1. Unzip this folder
 1. Type [`chrome://extensions/`](chrome://extensions/) in your URL
 1. Enable Developer Mode (top-right)
