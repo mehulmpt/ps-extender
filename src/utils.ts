@@ -19,7 +19,7 @@ export function getSelected() {
 }
 
 export function getAllItems() {
-  return $('#sortable_nav > li')
+  return document.querySelectorAll('#sortable_nav > li')
 }
 
 export function moveselectedto() {
@@ -270,7 +270,7 @@ export function importCsv() {
         fragment.appendChild(node)
       })
       // stations remaining in list were added after backup
-      stats.added = $('#sortable_nav > li').length
+      stats.added = document.querySelectorAll('#sortable_nav > li').length
       // add back fragment to the top of this list
       if (stats.added) {
         $('#sortable_nav').insertBefore(fragment, $('#sortable_nav > li:first-child'))
