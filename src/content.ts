@@ -31,7 +31,6 @@ if (checks()) {
 	// add styles
 	document.head.innerHTML += `
 	<style>${styles}</style>
-	<link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.2.0/css/all.css">
 	`
 
 	// disable default sorting library

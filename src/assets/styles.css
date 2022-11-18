@@ -122,12 +122,19 @@ ul#sortable_nav>li input.accomo {
 }
 
 /* ignore click events */
-.fa-solid,
+svg,
 #__PSZY_STIPEND__ *,
 #__PSZY_STUDENTS__ *,
 #__PSZY_PROJECTS__ *,
 #__PSZY_DISCIPLINE__ * {
   pointer-events: none;
+}
+
+svg {
+  vertical-align: middle;
+  display: inline-block;
+  width: 1em;
+  height: 1em;
 }
 
 @keyframes glow {
