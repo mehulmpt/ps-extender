@@ -21,11 +21,7 @@ jobs:
       run: npm run build
 
     - name: generate archive
-      uses: thedoctor0/zip-release@main
-      with:
-        type: 'zip'
-        path: 'dist'
-        filename: 'PSExtender.zip'
+      run: (cd dist && zip -r ../PSExtender.zip .)
 
     - name: create release
       uses: marvinpinto/action-automatic-releases@latest
