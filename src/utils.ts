@@ -224,7 +224,7 @@ export function exportCsv() {
   const url = URL.createObjectURL(blob)
   const anchor = document.createElement('a')
   anchor.href = url
-  anchor.download = 'ps2_preferences.csv'
+  anchor.download = 'station_preferences.csv'
   document.body.appendChild(anchor)
   anchor.click()
   anchor.remove()
