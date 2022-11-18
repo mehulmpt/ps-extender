@@ -37,7 +37,7 @@ if (checks()) {
 	divider.outerHTML = globalControls + divider.outerHTML
 
 	// add item controls
-	const lis = $('#sortable_nav > li')
+	const lis = $('#sortable_nav').querySelectorAll('li')
 	lis.forEach((li) => (li.innerHTML += itemControls))
 
 	document.addEventListener('click', checkPSZYClicks, false)
