@@ -58,7 +58,8 @@ ul#sortable_nav>li input.accomo {
 #sortable_nav>li:first-child div #__PSZY_TOP__,
 #sortable_nav>li:last-child div #__PSZY_MOVEDOWN__,
 #sortable_nav>li:last-child div #__PSZY_BOTTOM__ {
-  visibility: hidden;
+  opacity: 40%;
+  pointer-events: none;
 }
 
 /* hide controls when not hovered */
