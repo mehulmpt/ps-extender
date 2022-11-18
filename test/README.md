@@ -8,6 +8,12 @@ These changes have been made to `StudentStationPreference.aspx.html`
 ```
 
 ```diff
+    <script src="./StudentStationPreference.aspx_files/StudentStationPref.js" type="text/javascript"></script>
++    <link href="/assets/styles.css" rel="stylesheet" type="text/css">
+</head>
+```
+
+```diff
     </script>
 
 -

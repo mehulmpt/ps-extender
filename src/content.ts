@@ -1,6 +1,5 @@
 // @ts-nocheck
 
-import styles from './assets/styles.css?raw'
 import globalControls from './templates/globalControls.html?raw'
 import itemControls from './templates/itemControls.html?raw'
 import { $, moveup, movedown, movetotop, movetobottom, moveswap, moveto, exportCsv, importCsv, selectRange, deselectRange, selectPattern, deselectPattern, deselectAll, moveselectedto, moveselectedtop, moveselectedbottom, selectNode, viewProblemBank } from './utils'
@@ -27,11 +26,6 @@ function checks() {
 if (checks()) {
 
 	window.__PSZYSET__ = true
-
-	// add styles
-	document.head.innerHTML += `
-	<style>${styles}</style>
-	`
 
 	// disable default sorting library
 	const script = document.createElement('script')
