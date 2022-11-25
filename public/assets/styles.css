@@ -144,6 +144,10 @@ svg {
   height: 1.2em;
 }
 
+#__PSZY_FETCHINFOPROGRESS__:indeterminate {
+  display: none;
+}
+
 @keyframes glow {
   0% {
     opacity: 1;

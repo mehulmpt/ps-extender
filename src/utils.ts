@@ -19,7 +19,7 @@ export function getSelected() {
 }
 
 export function getAllItems() {
-  return document.querySelectorAll('#sortable_nav > li')
+  return Array.from(document.querySelectorAll('#sortable_nav > li'))
 }
 
 export function moveselectedto() {
@@ -286,7 +286,7 @@ export function importCsv() {
 export function viewProblemBank(node, { openInBackground = false } = {}) {
   let stid = node.querySelector('.spanclass.uiicon').attributes.spn.value
   let fetchBody = { StationId: stid }
-  fetch("http://psd.bits-pilani.ac.in/Student/ViewActiveStationProblemBankData.aspx/getPBPOPUP", {
+  return fetch("http://psd.bits-pilani.ac.in/Student/ViewActiveStationProblemBankData.aspx/getPBPOPUP", {
     headers: {
       "content-type": "application/json; charset=UTF-8",
     },
@@ -297,23 +297,23 @@ export function viewProblemBank(node, { openInBackground = false } = {}) {
     mode: "cors",
     credentials: "include"
   })
-    .then(response => response.json())
-    .then(data => {
-      const parsed = JSON.parse(data.d)
-      if (parsed.length > 0) {
-        const url = `StationproblemBankDetails.aspx?CompanyId=${parsed[0].CompanyId}&StationId=${parsed[0].StationId}&BatchIdFor=${parsed[0].BatchIdFor}&PSTypeFor=${parsed[0].PSTypeFor}`
-        if (openInBackground) {
-          const iframe = $('#__PSZY_BGFRAME__') as HTMLIFrameElement
-          iframe.src = url
-          iframe.contentWindow.onload = setTimeout(() => { updateStationInfo(node).catch(e => console.error(e)) }, 100)
-        } else {
-          const w = window.open(url, "_blank")
-          w.onload = () => setTimeout(() => { updateStationInfo(node).catch(e => console.error(e)) }, 100)
-        }
+  .then(response => response.json())
+  .then(data => {
+    const parsed = JSON.parse(data.d)
+    if (parsed.length > 0) {
+      const url = `StationproblemBankDetails.aspx?CompanyId=${parsed[0].CompanyId}&StationId=${parsed[0].StationId}&BatchIdFor=${parsed[0].BatchIdFor}&PSTypeFor=${parsed[0].PSTypeFor}`
+      if (openInBackground) {
+        const iframe = $('#__PSZY_BGFRAME__') as HTMLIFrameElement
+        iframe.src = url
+        iframe.contentWindow.onload = setTimeout(() => { updateStationInfo(node).catch(e => console.error(e)) }, 500)
       } else {
-        alert('No problem banks found')
+        const w = window.open(url, "_blank")
+        w.onload = () => setTimeout(() => { updateStationInfo(node).catch(e => console.error(e)) }, 500)
       }
-    })
+    } else {
+      throw new Error('No problem banks found')
+    }
+  })
 }
 
 export function updateStationInfo(node) {
@@ -388,4 +388,19 @@ export function updateStationInfo(node) {
       node.querySelector('#__PSZY_PROJECTS__ span').innerText = parsed1?.[0].TotalProject ?? '-'
       node.querySelector('#__PSZY_DISCIPLINE__ span').innerText = Array.from(new Set(tags.split(','))).filter(x => !!x).join(',') || 'Any'
     })
+}
+
+export function fillAllStationInfo() {
+  const allNodes = getAllItems()
+  allNodes.forEach((n, i) => {
+    setTimeout(() => {
+      viewProblemBank(n, { openInBackground: true }).then(() => {
+        $('#__PSZY_FETCHINFOPROGRESS__').value = (i + 1) / allNodes.length
+        $('#__PSZY_FETCHINFOPROGRESS__').title = `${i + 1}/${allNodes.length}: about ${Math.ceil((allNodes.length - i) * 2 / 60)} minutes remaining`
+        if (i === allNodes.length - 1) {
+          $('#__PSZY_FETCHINFOPROGRESS__').removeAttribute('value')
+        }
+      })
+    }, 2000*i)
+  })
 }

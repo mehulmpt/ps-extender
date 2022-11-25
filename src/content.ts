@@ -2,7 +2,7 @@
 
 import globalControls from './templates/globalControls.html?raw'
 import itemControls from './templates/itemControls.html?raw'
-import { $, moveup, movedown, movetotop, movetobottom, moveswap, moveto, exportCsv, importCsv, selectRange, deselectRange, selectPattern, deselectPattern, deselectAll, moveselectedto, moveselectedtop, moveselectedbottom, selectNode, viewProblemBank } from './utils'
+import { $, moveup, movedown, movetotop, movetobottom, moveswap, moveto, exportCsv, importCsv, selectRange, deselectRange, selectPattern, deselectPattern, deselectAll, moveselectedto, moveselectedtop, moveselectedbottom, selectNode, viewProblemBank, fillAllStationInfo } from './utils'
 
 function checks() {
 	if (!['psd.bits-pilani.ac.in', 'localhost', '127.0.0.1'].includes(location.hostname)) {
@@ -87,11 +87,10 @@ if (checks()) {
 			case '__PSZY_DISCIPLINE__':
 				viewProblemBank(e.target.parentNode.parentNode, { openInBackground: true })
 				break
-			// case '__PSZY_FETCHINFO__': {
-			// 	const allNodes = getAllItems()
-			// 	allNodes.forEach(n => updateStationInfo(n))
-			// 	break
-			// }
+			case '__PSZY_FETCHINFO__': {
+				fillAllStationInfo()
+				break
+			}
 			case '__PSZY_EXPORT__':
 				exportCsv()
 				break
