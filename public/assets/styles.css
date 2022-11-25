@@ -13,6 +13,8 @@
 }
 
 #__PSZY_CONTROLS__ {
+  position: absolute;
+  right: 50px;
   justify-content: flex-end;
   gap: 10px;
   order: 6;
@@ -88,7 +90,7 @@ ul#sortable_nav>li input.accomo {
 #sortable_nav>li:hover #__PSZY_NOTE__ {
   display: inline-block;
   position: absolute;
-  right: 50px;
+  right: 48px;
   bottom: 100%;
   transform: translateY(10px);
   padding: 8px;
@@ -134,8 +136,12 @@ svg,
 svg {
   vertical-align: middle;
   display: inline-block;
-  width: 1em;
+  width: auto;
   height: 1em;
+}
+
+#__PSZY_CONTROLS__  svg {
+  height: 1.2em;
 }
 
 @keyframes glow {
