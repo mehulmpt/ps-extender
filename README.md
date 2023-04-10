@@ -18,8 +18,7 @@
 
 ## 🎓 Usage
 
-The easiest way to use this is to install is using webstore [here](http://bit.ly/ps-extender). For some reason, if you want to set it up manually:
-
+Since this is a fork of the original, install using these steps:
 1. Click on clone -> download zip
 2. Type `chrome://extensions/` in your URL
 3. Enable Developer Mode (top-right)
