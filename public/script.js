@@ -1,4 +1,20 @@
-chrome.browserAction.onClicked.addListener((activeTab) => {
-	chrome.tabs.insertCSS(null, { file: 'assets/styles.css' });
-	chrome.tabs.executeScript(null, { file: 'content.js' })
-})
+if (chrome.scripting) 
+{
+    chrome.action.onClicked.addListener((tab) => 
+	{
+        chrome.scripting.insertCSS({
+            target: { tabId: tab.id },
+            files: ['assets/styles.css']
+        }).then(() => {
+            return chrome.scripting.executeScript({
+                target: { tabId: tab.id },
+                files: ['content.js']
+            });
+        }).catch((error) => {
+            console.error('Error: ', error);
+        });
+    });
+} else 
+{
+    console.error('chrome.scripting API is not available');
+}
