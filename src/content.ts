@@ -2,7 +2,7 @@
 
 import globalControls from './templates/globalControls.html?raw'
 import itemControls from './templates/itemControls.html?raw'
-import { $, moveup, movedown, movetotop, movetobottom, moveswap, moveto, exportCsv, importCsv, selectRange, deselectRange, selectPattern, deselectPattern, deselectAll, moveselectedto, moveselectedtop, moveselectedbottom, handleStrayClick, viewProblemBank, fillAllStationInfo } from './utils'
+import { $, moveup, movedown, movetotop, movetobottom, moveswap, moveto, exportCsv, importCsv, selectRange, deselectRange, selectPattern, deselectPattern, deselectAll, moveselectedto, moveselectedtop, moveselectedbottom, handleStrayClick, viewProblemBank, fillAllStationInfo, getAllItems, updateSelectedCount } from './utils'
 
 function checks() {
 	if (!['psd.bits-pilani.ac.in', 'localhost', '127.0.0.1'].includes(location.hostname)) {
@@ -43,18 +43,11 @@ if (checks()) {
 	lis.forEach((li) => (li.innerHTML += itemControls))
 
 	// retrieve notes from local storage
-	chrome.storage.local.get(['__PSZY_NOTES__'], (result) => {
-		console.log(result)
-		const notes = result.__PSZY_NOTES__
-		if (notes) {
-			notes.forEach((note, i) => {
-				// lis[i].querySelector('#__PSZY_NOTE__').innerText = note
-				Array.from(lis).find(li => li.querySelector(".spanclass.uiicon").getAttribute("spn")== note.spn).querySelector('#__PSZY_NOTE__').innerText = note.note
-			})
-		}
-	})
+	retrieveSavedNotes(lis)
 
 	document.addEventListener('click', checkPSZYClicks, false)
+	
+	checkForNewStations()
 
 	function checkPSZYClicks(e) {
 		switch (e.target.id) {
@@ -149,4 +142,35 @@ if (checks()) {
 		}
 	}
 
+}
+
+async function checkForNewStations() {
+	const { __PSZY_STATIONS__ : oldStations} = await chrome.storage.local.get('__PSZY_STATIONS__')
+	const lis = getAllItems()
+	const currentStations = Array.from(lis).map(li => li.querySelector(".spanclass.uiicon").getAttribute("spn"))
+	console.log(oldStations)
+	if (oldStations) {
+		const newStations = currentStations.filter(station => !oldStations.includes(station))
+		if (newStations.length > 0) {
+			newStations.forEach(station => {
+				Array.from(lis).find(li => li.querySelector(".spanclass.uiicon").getAttribute("spn")== station)?.classList.add("selected")
+			})
+			updateSelectedCount()
+			alert(`Found and selected${newStations.length} new station${newStations.length > 1 ? 's' : ''}`)
+		}
+	}
+	chrome.storage.local.set({ __PSZY_STATIONS__: currentStations })
+}
+
+function retrieveSavedNotes(lis) {
+	chrome.storage.local.get(['__PSZY_NOTES__'], (result) => {
+		console.log(result)
+		const notes = result.__PSZY_NOTES__
+		if (notes) {
+			notes.forEach((note, i) => {
+				// lis[i].querySelector('#__PSZY_NOTE__').innerText = note
+				Array.from(lis).find(li => li.querySelector(".spanclass.uiicon").getAttribute("spn")== note.spn).querySelector('#__PSZY_NOTE__').innerText = note.note
+			})
+		}
+	})
 }
