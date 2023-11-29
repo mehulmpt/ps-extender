@@ -31,8 +31,6 @@ if (checks()) {
 	const script = document.createElement('script')
 	script.src = chrome.runtime.getURL('csp.js') ;
 	(document.head || document.documentElement).appendChild(script);
-	// script.innerHTML = `$('#sortable_nav').sortable('destroy'); $('#sortable_nav').enableSelection();`
-	// document.head.appendChild(script)
 
 	// add global controls
 	const divider = $('#rptlist > .hr.hr-dotted')
@@ -168,7 +166,6 @@ function retrieveSavedNotes(lis) {
 		const notes = result.__PSZY_NOTES__
 		if (notes) {
 			notes.forEach((note, i) => {
-				// lis[i].querySelector('#__PSZY_NOTE__').innerText = note
 				Array.from(lis).find(li => li.querySelector(".spanclass.uiicon").getAttribute("spn")== note.spn).querySelector('#__PSZY_NOTE__').innerText = note.note
 			})
 		}
