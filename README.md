@@ -23,6 +23,8 @@
 
 👉 Add notes
 
+👉 Alert new stations added since last visit
+
 👉 Removes the default jQuery implementation on the website
 
 ![Screenshot of the preference page with this extension enabled](.github/images/screenshot.png)
@@ -31,7 +33,7 @@
 
 The easiest way to use this is to install is using webstore [here](http://bit.ly/ps-extender). For some reason, if you want to set it up manually:
 
-1. Download the latest version of `PSExtender.zip` from [Releases](https://github.com/mehulmpt/ps-extender/releases)
+1. Download the latest version of `PSExtender.zip` from Releases -> latest
 1. Unzip this folder
 1. Type [`chrome://extensions/`](chrome://extensions/) in your URL
 1. Enable Developer Mode (top-right)
