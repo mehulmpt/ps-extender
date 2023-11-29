@@ -1,0 +1,17 @@
+{
+  "name": "ps-extender",
+  "version": "2.4.0",
+  "description": "Practice School Extender for BITS Pilani",
+  "private": "true",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc && vite build",
+    "build:watch": "tsc && vite build --watch",
+    "dev": "vite"
+  },
+  "devDependencies": {
+    "typescript": "^4.6.4",
+    "vite": "^3.2.3"
+  }
+}

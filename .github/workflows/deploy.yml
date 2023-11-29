@@ -1,21 +1,31 @@
 name: Zip and deploy to webstore
 on:
-    push:
-        branches:
-            - 'master'
+    workflow_dispatch:
 jobs:
     zip_and_deploy:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
+            
+            - uses: actions/setup-node@v3
+              with:
+                node-version: 16
+                cache: 'npm'
+
+            - name: install dependencies
+              run: npm ci
+
+            - name: 🚧 Building
+              run: npm run build
+
             - name: 🚨 Zipping
-              run: cd src && zip -r build.zip *
+              run: (cd dist && zip -r ../PSExtender.zip .)
 
             - uses: trmcnvn/chrome-addon@v2
               name: ✅ Deploying to webstore
               with:
                   extension: bbaegmboolkgheghdaoahaabjnkofmdm
-                  zip: src/build.zip
+                  zip: PSExtender.zip
                   client-id: ${{ secrets.CLIENT_ID }}
                   client-secret: ${{ secrets.CLIENT_SECRET }}
                   refresh-token: ${{ secrets.REFRESH_TOKEN }}

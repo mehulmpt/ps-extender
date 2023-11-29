@@ -1,0 +1,167 @@
+#__PSZY_INFO__,
+#__PSZY_CONTROLS__ {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  height: 24px;
+}
+
+#__PSZY_INFO__ {
+  justify-content: flex-start;
+  gap: 8px;
+  order: 2;
+}
+
+#__PSZY_CONTROLS__ {
+  position: absolute;
+  right: 50px;
+  justify-content: flex-end;
+  gap: 10px;
+  order: 6;
+}
+
+ul#sortable_nav>li {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+ul#sortable_nav>li .sortable-number {
+  flex: 0 0 auto;
+  order: 1;
+  margin-left: -60px;
+  float: none;
+}
+
+ul#sortable_nav>li .uiicon {
+  margin: 0px;
+  order: 3;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+ul#sortable_nav>li .spacer {
+  order: 4;
+}
+
+ul#sortable_nav>li input.accomo {
+  flex: 0 0 auto;
+  order: 7;
+  float: none;
+  margin: 0;
+  width: 24px;
+  height: 24px;
+}
+
+/* hide buttons that do nothing */
+#sortable_nav>li:first-child div #__PSZY_MOVEUP__,
+#sortable_nav>li:first-child div #__PSZY_TOP__,
+#sortable_nav>li:last-child div #__PSZY_MOVEDOWN__,
+#sortable_nav>li:last-child div #__PSZY_BOTTOM__ {
+  opacity: 40%;
+  pointer-events: none;
+}
+
+/* hide controls when not hovered */
+#sortable_nav>li:not(:hover) #__PSZY_CONTROLS__ {
+  display: none;
+}
+
+/* but show if something is in focus */
+#sortable_nav>li #__PSZY_CONTROLS__:focus-within {
+  display: flex;
+}
+
+/* hide note if empty and not in focus */
+#__PSZY_NOTE__:empty:not(:focus),
+#sortable_nav>li:hover #__PSZY_NOTE__:empty:not(:focus) {
+  display: none;
+}
+
+/* note style when not hovered */
+#sortable_nav>li:not(:hover) #__PSZY_NOTE__ {
+  position: relative;
+  order: 5;
+}
+
+/* note styles when hovered */
+#sortable_nav>li:hover #__PSZY_NOTE__ {
+  display: inline-block;
+  position: absolute;
+  right: 48px;
+  bottom: 100%;
+  transform: translateY(10px);
+  padding: 8px;
+  color: #555555;
+	background-color: #ffffff;
+  border: 1px solid #c1c1c1;
+	border-radius: 4px;
+	box-shadow: 0 0 10px #c1c1c1;
+}
+
+#sortable_nav>li:hover #__PSZY_NOTE__::before,
+#sortable_nav>li:hover #__PSZY_NOTE__::after {
+	content: "";
+	position: absolute;
+	width: 12px;
+	height: 6px;
+  top: 100%;
+	right: 2px;
+	-webkit-clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+  clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+}
+
+#sortable_nav>li:hover #__PSZY_NOTE__::before {
+	background-color: #c1c1c1;
+  z-index: 2;
+}
+
+#sortable_nav>li:hover #__PSZY_NOTE__::after {
+	background-color: #ffffff;
+  transform: translateY(-1.414px);
+  z-index: 3;
+}
+
+/* ignore click events */
+svg,
+#__PSZY_STIPEND__ *,
+#__PSZY_STUDENTS__ *,
+#__PSZY_PROJECTS__ *,
+#__PSZY_DISCIPLINE__ * {
+  pointer-events: none;
+}
+
+svg {
+  vertical-align: middle;
+  display: inline-block;
+  width: auto;
+  height: 1em;
+}
+
+#__PSZY_CONTROLS__  svg {
+  height: 1.2em;
+}
+
+#__PSZY_FETCHINFOPROGRESS__:indeterminate {
+  display: none;
+}
+
+@keyframes glow {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.glow {
+  animation: glow 0.4s linear;
+}
