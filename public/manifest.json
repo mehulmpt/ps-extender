@@ -17,7 +17,8 @@
 	},
 	"permissions": [
 		"activeTab",
-		"scripting"
+		"scripting",
+		"storage"
 	],
 	"web_accessible_resources": [
 		{

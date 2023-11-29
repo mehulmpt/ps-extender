@@ -2,7 +2,7 @@
 
 import globalControls from './templates/globalControls.html?raw'
 import itemControls from './templates/itemControls.html?raw'
-import { $, moveup, movedown, movetotop, movetobottom, moveswap, moveto, exportCsv, importCsv, selectRange, deselectRange, selectPattern, deselectPattern, deselectAll, moveselectedto, moveselectedtop, moveselectedbottom, selectNode, viewProblemBank, fillAllStationInfo } from './utils'
+import { $, moveup, movedown, movetotop, movetobottom, moveswap, moveto, exportCsv, importCsv, selectRange, deselectRange, selectPattern, deselectPattern, deselectAll, moveselectedto, moveselectedtop, moveselectedbottom, handleStrayClick, viewProblemBank, fillAllStationInfo } from './utils'
 
 function checks() {
 	if (!['psd.bits-pilani.ac.in', 'localhost', '127.0.0.1'].includes(location.hostname)) {
@@ -42,12 +42,25 @@ if (checks()) {
 	const lis = $('#sortable_nav').querySelectorAll('li')
 	lis.forEach((li) => (li.innerHTML += itemControls))
 
+	// retrieve notes from local storage
+	chrome.storage.local.get(['__PSZY_NOTES__'], (result) => {
+		console.log(result)
+		const notes = result.__PSZY_NOTES__
+		if (notes) {
+			notes.forEach((note, i) => {
+				// lis[i].querySelector('#__PSZY_NOTE__').innerText = note
+				Array.from(lis).find(li => li.querySelector(".spanclass.uiicon").getAttribute("spn")== note.spn).querySelector('#__PSZY_NOTE__').innerText = note.note
+			})
+		}
+	})
+
 	document.addEventListener('click', checkPSZYClicks, false)
 
 	function checkPSZYClicks(e) {
 		switch (e.target.id) {
 			case '__PSZY_ADDNOTE__': {
 				const note = e.target.parentNode.parentNode.querySelector('#__PSZY_NOTE__')
+				e.target.parentNode.parentNode.setAttribute('note-editing', "true")
 				note.focus()
 				if (note.innerText.length > 0) break
 				note.innerText = 'Edit me'
@@ -131,7 +144,7 @@ if (checks()) {
 				})
 				break
 			default:
-				selectNode(e.target)
+				handleStrayClick(e.target)
 				break
 		}
 	}

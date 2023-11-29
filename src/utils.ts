@@ -18,6 +18,7 @@ export function getSelected() {
   return $('#sortable_nav').querySelectorAll('li.selected')
 }
 
+/// Get all station li nodes
 export function getAllItems() {
   return Array.from(document.querySelectorAll('#sortable_nav > li'))
 }
@@ -66,13 +67,42 @@ export function moveSelected(selection, to, { preserveSelection = false, recalcu
   glow(...selection)
   if (!preserveSelection) deselectAll()
 }
-
-export function selectNode(node) {
-  // ignore clicks on any interactive element
-  if (node.matches('input, a, button')) return
-  // else (de)select the item
+function toggleNodeSelection(node) {
   node.closest('#sortable_nav > li')?.classList.toggle('selected')
   updateSelectedCount()
+}
+function saveEditedNote() {
+  const lis = getAllItems()
+  lis.forEach(li => {
+    if(li.getAttribute("note-editing") == "true"){
+      const spn = li.querySelector(".spanclass.uiicon").getAttribute("spn")
+      const note = li.querySelector("#__PSZY_NOTE__").innerText
+      chrome.storage.local.get(['__PSZY_NOTES__'], (result) => {
+        const notes = result.__PSZY_NOTES__
+        console.log(notes)
+        if (notes) {
+          const index = notes.findIndex(n => n.spn == spn)
+          if (index >= 0) {
+            notes[index].note = note
+          } else {
+            notes.push({ spn, note })
+          }
+          chrome.storage.local.set({ __PSZY_NOTES__: notes })
+        } else {
+          chrome.storage.local.set({ __PSZY_NOTES__: [{ spn, note }] })
+        }
+      })
+      li.removeAttribute("note-editing")
+    }
+  })
+}
+export function handleStrayClick(target : HTMLElement) {
+  // save the note if a note was being edited
+  saveEditedNote()
+  // ignore clicks on any interactive element
+  if (target.matches('input, a, button')) return
+  // else (de)select the item if the click was on a list item
+  toggleNodeSelection(target)
 }
 
 export function deselectAll() {
