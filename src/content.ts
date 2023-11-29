@@ -29,8 +29,10 @@ if (checks()) {
 
 	// disable default sorting library
 	const script = document.createElement('script')
-	script.innerHTML = `$('#sortable_nav').sortable('destroy'); $('#sortable_nav').enableSelection();`
-	document.head.appendChild(script)
+	script.src = chrome.runtime.getURL('csp.js') ;
+	(document.head || document.documentElement).appendChild(script);
+	// script.innerHTML = `$('#sortable_nav').sortable('destroy'); $('#sortable_nav').enableSelection();`
+	// document.head.appendChild(script)
 
 	// add global controls
 	const divider = $('#rptlist > .hr.hr-dotted')

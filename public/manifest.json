@@ -1,17 +1,32 @@
 {
-	"manifest_version": 2,
+	"manifest_version": 3,
 	"name": "Practice School Extender for BITS Pilani",
 	"version": "2.4.0",
 	"description": "Extends functionality of PSD interface by adding controls for sorting rows, backups, problem bank viewer",
-	"browser_action": {},
-	"icons": {
-		"32": "icon.png",
-		"48": "icon.png",
-		"64": "icon.png",
-		"128": "icon.png"
+	"action": {
+		"default_icon": {
+			"32": "icon.png",
+			"48": "icon.png",
+			"64": "icon.png",
+			"128": "icon.png"
+		},
+		"default_title": "Click to run"
 	},
 	"background": {
-		"scripts": ["script.js"]
+		"service_worker": "script.js"
 	},
-	"permissions": ["activeTab"]
+	"permissions": [
+		"activeTab",
+		"scripting"
+	],
+	"web_accessible_resources": [
+		{
+			"resources": [
+				"csp.js"
+			],
+			"matches": [
+				"http://psd.bits-pilani.ac.in/*"
+			]
+		}
+	]
 }
