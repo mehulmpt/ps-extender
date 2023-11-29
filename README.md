@@ -31,7 +31,8 @@
 
 ## 🎓 Usage
 
-The easiest way to use this is to install is using webstore [here](http://bit.ly/ps-extender). For some reason, if you want to set it up manually:
+~~The easiest way to use this is to install is using webstore [here](http://bit.ly/ps-extender). For some reason, if you want to set it up manually:~~
+This extension is not available on the Chrome Web Store presently. You can install it manually by following the steps below:
 
 1. Download the latest version of `PSExtender.zip` from Releases -> latest
 1. Unzip this folder
