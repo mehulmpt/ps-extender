@@ -8,10 +8,12 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc && vite build",
     "build:watch": "tsc && vite build --watch",
-    "dev": "vite"
+    "dev": "vite",
+    "start:firefox": "web-ext run --source-dir ./dist_firefox/"
   },
   "devDependencies": {
     "typescript": "^4.6.4",
-    "vite": "^3.2.3"
+    "vite": "^3.2.3",
+    "web-ext": "^7.8.0"
   }
 }

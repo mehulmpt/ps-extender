@@ -13,7 +13,9 @@
 		"default_title": "Click to run"
 	},
 	"background": {
-		"service_worker": "script.js"
+		"scripts": [
+			"script.js"
+		]
 	},
 	"permissions": [
 		"activeTab",
