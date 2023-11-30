@@ -33,9 +33,7 @@ if (checks()) {
 	(document.head || document.documentElement).appendChild(script);
 
 	// confirm page leave
-	window.onbeforeunload = function () {
-		return 'Are you sure you want to leave?'
-	}
+	updatePageLeaveConfirmation()
 
 	// add global controls
 	const divider = $('#rptlist > .hr.hr-dotted')
@@ -53,6 +51,8 @@ if (checks()) {
 	checkForNewStations()
 
 	fillAllStationInfoCached()
+
+	updatePageLeaveConfirmation()
 
 	function checkPSZYClicks(e) {
 		switch (e.target.id) {
@@ -141,12 +141,40 @@ if (checks()) {
 					behavior: 'smooth',
 				})
 				break
+			case '__PSZY_CONFIRMONLEAVE__':
+				const confirm = e.target.checked
+				chrome.storage.local.set({ __PSZY_CONFIRMONLEAVE__: confirm })
+				updatePageLeaveConfirmation()
+				break
 			default:
 				handleStrayClick(e.target)
 				break
 		}
 	}
 
+}
+
+function updatePageLeaveConfirmation() {
+	chrome.storage.local.get("__PSZY_CONFIRMONLEAVE__")
+	.then((res) => {
+		if(res.__PSZY_CONFIRMONLEAVE__ === true){
+			// $("#_PSZY_CONFIRMONLEAVE__").checked = true
+			document.getElementById("__PSZY_CONFIRMONLEAVE__")?.setAttribute("checked", "true")
+			window.onbeforeunload = function() {
+				return 'Are you sure you want to leave?'
+			}
+		} else if(res.__PSZY_CONFIRMONLEAVE__ === false){
+			// $("#_PSZY_CONFIRMONLEAVE__").checked = false
+			document.getElementById("__PSZY_CONFIRMONLEAVE__")?.removeAttribute("checked")
+			window.onbeforeunload = null
+		}
+		else {
+			chrome.storage.local.set({ __PSZY_CONFIRMONLEAVE__: true })
+			window.onbeforeunload = function() {
+				return 'Are you sure you want to leave?'
+			}
+		}
+	})
 }
 
 async function checkForNewStations() {
@@ -168,11 +196,12 @@ async function checkForNewStations() {
 
 function retrieveSavedNotes(lis) {
 	chrome.storage.local.get(['__PSZY_NOTES__'], (result) => {
-		console.log(result)
 		const notes = result.__PSZY_NOTES__
 		if (notes) {
 			notes.forEach((note, i) => {
-				Array.from(lis).find(li => li.querySelector(".spanclass.uiicon").getAttribute("spn")== note.spn).querySelector('#__PSZY_NOTE__').innerText = note.note
+				const node = Array.from(lis).find(li => li.querySelector(".spanclass.uiicon").getAttribute("spn")== note.spn)
+				if(node)
+					node.querySelector('#__PSZY_NOTE__').innerText = note.note
 			})
 		}
 	})
