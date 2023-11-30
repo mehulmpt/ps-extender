@@ -32,6 +32,11 @@ if (checks()) {
 	script.src = chrome.runtime.getURL('csp.js') ;
 	(document.head || document.documentElement).appendChild(script);
 
+	// confirm page leave
+	window.onbeforeunload = function () {
+		return 'Are you sure you want to leave?'
+	}
+
 	// add global controls
 	const divider = $('#rptlist > .hr.hr-dotted')
 	divider.outerHTML = globalControls + divider.outerHTML
