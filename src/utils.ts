@@ -313,7 +313,7 @@ export function importCsv() {
   })
 }
 
-export function viewProblemBank(node, { openInBackground = false } = {}) {
+export function viewProblemBank(node, { openInBackground = false, forFetch = false } = {}) {
   let stid = node.querySelector('.spanclass.uiicon').attributes.spn.value
   let fetchBody = { StationId: stid }
   return fetch("http://psd.bits-pilani.ac.in/Student/ViewActiveStationProblemBankData.aspx/getPBPOPUP", {
@@ -335,10 +335,10 @@ export function viewProblemBank(node, { openInBackground = false } = {}) {
       if (openInBackground) {
         const iframe = $('#__PSZY_BGFRAME__') as HTMLIFrameElement
         iframe.src = url
-        iframe.contentWindow.onload = setTimeout(() => { updateStationInfo(node).catch(e => console.error(e)) }, 500)
+        iframe.contentWindow.onload = setTimeout(() => { updateStationInfo(node, {forceFetch}).catch(e => console.error(e)) }, 500)
       } else {
         const w = window.open(url, "_blank")
-        w.onload = () => setTimeout(() => { updateStationInfo(node).catch(e => console.error(e)) }, 500)
+        w.onload = () => setTimeout(() => { updateStationInfo(node, {forceFetch}).catch(e => console.error(e)) }, 500)
       }
     } else {
       throw new Error('No problem banks found')
@@ -346,7 +346,21 @@ export function viewProblemBank(node, { openInBackground = false } = {}) {
   })
 }
 
-export function updateStationInfo(node) {
+async function updateWithCached(node) {
+  const stid = node.querySelector('.spanclass.uiicon').attributes.spn.value
+  const {__PSZY_INFO__} = await chrome.storage.local.get("__PSZY_INFO__")
+  if (__PSZY_INFO__) {
+    const info = __PSZY_INFO__[node.querySelector('.spanclass.uiicon').attributes.spn.value]
+    if (info) {
+      updateNodeInfoUI(node, info)
+      return true
+    }
+  }
+  return false
+}
+
+export async function updateStationInfo(node, {forceFetch = false} = {}) {
+  if(!forceFetch && updateWithCached(node)) return
   const stid = node.querySelector('.spanclass.uiicon').attributes.spn.value
   const fetchBody = { StationId: stid }
   return fetch("http://psd.bits-pilani.ac.in/Student/ViewActiveStationProblemBankData.aspx/getPBPOPUP", {
@@ -413,18 +427,35 @@ export function updateStationInfo(node) {
       const parsed2 = JSON.parse(data2.d)[0]
       const totStudents = parsed1?.map(p => p.TotalReqdStudents).reduce((acc, val) => acc + val) ?? '-'
       const tags = parsed1?.map(p => p.Tags.replaceAll(' ', '').replaceAll('-', '').replaceAll('Any', '')).join(',')
-      node.querySelector('#__PSZY_STIPEND__ span').innerText = parsed2?.Stipend ?? '-'
-      node.querySelector('#__PSZY_STUDENTS__ span').innerText = totStudents
-      node.querySelector('#__PSZY_PROJECTS__ span').innerText = parsed1?.[0].TotalProject ?? '-'
-      node.querySelector('#__PSZY_DISCIPLINE__ span').innerText = Array.from(new Set(tags.split(','))).filter(x => !!x).join(',') || 'Any'
-    })
+      const info = {
+        stipend: parsed2?.Stipend ?? '-',
+        totStudents,
+        totalProject: parsed1?.[0].TotalProject ?? '-',
+        tags
+      }
+      updateNodeInfoUI(node, info)
+      const {__PSZY_INFO__} = await chrome.storage.local.get("__PSZY_INFO__")
+      if (__PSZY_INFO__) {
+        __PSZY_INFO__[stid] = info
+        chrome.storage.local.set({ __PSZY_INFO__ })
+      } else {
+        chrome.storage.local.set({ __PSZY_INFO__: { [stid]: info } })
+      }
+  })
 }
 
-export function fillAllStationInfo() {
+function updateNodeInfoUI(node, {stipend, totStudents, totalProject, tags}) {
+  node.querySelector('#__PSZY_STIPEND__ span').innerText = stipend ?? '-'
+  node.querySelector('#__PSZY_STUDENTS__ span').innerText = totStudents
+  node.querySelector('#__PSZY_PROJECTS__ span').innerText = totalProject ?? '-'
+  node.querySelector('#__PSZY_DISCIPLINE__ span').innerText = tags
+}
+
+export function fillAllStationInfo(forceFetch = false) {
   const allNodes = getAllItems()
   allNodes.forEach((n, i) => {
     setTimeout(() => {
-      viewProblemBank(n, { openInBackground: true }).then(() => {
+      viewProblemBank(n, { openInBackground: true, forceFetch }).then(() => {
         $('#__PSZY_FETCHINFOPROGRESS__').value = (i + 1) / allNodes.length
         $('#__PSZY_FETCHINFOPROGRESS__').title = `${i + 1}/${allNodes.length}: about ${Math.ceil((allNodes.length - i) * 2 / 60)} minutes remaining`
         if (i === allNodes.length - 1) {

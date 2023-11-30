@@ -151,7 +151,6 @@ async function checkForNewStations() {
 	const { __PSZY_STATIONS__ : oldStations} = await chrome.storage.local.get('__PSZY_STATIONS__')
 	const lis = getAllItems()
 	const currentStations = Array.from(lis).map(li => li.querySelector(".spanclass.uiicon").getAttribute("spn"))
-	console.log(oldStations)
 	if (oldStations) {
 		const newStations = currentStations.filter(station => !oldStations.includes(station))
 		if (newStations.length > 0) {
