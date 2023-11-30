@@ -335,10 +335,10 @@ export function viewProblemBank(node, { openInBackground = false, forFetch = fal
       if (openInBackground) {
         const iframe = $('#__PSZY_BGFRAME__') as HTMLIFrameElement
         iframe.src = url
-        iframe.contentWindow.onload = setTimeout(() => { updateStationInfo(node, {forceFetch}).catch(e => console.error(e)) }, 500)
+        iframe.contentWindow.onload = setTimeout(() => { updateStationInfo(node).catch(e => console.error(e)) }, 500)
       } else {
         const w = window.open(url, "_blank")
-        w.onload = () => setTimeout(() => { updateStationInfo(node, {forceFetch}).catch(e => console.error(e)) }, 500)
+        w.onload = () => setTimeout(() => { updateStationInfo(node).catch(e => console.error(e)) }, 500)
       }
     } else {
       throw new Error('No problem banks found')
@@ -346,9 +346,8 @@ export function viewProblemBank(node, { openInBackground = false, forFetch = fal
   })
 }
 
-async function updateWithCached(node) {
+function updateWithCached(node, __PSZY_INFO__) {
   const stid = node.querySelector('.spanclass.uiicon').attributes.spn.value
-  const {__PSZY_INFO__} = await chrome.storage.local.get("__PSZY_INFO__")
   if (__PSZY_INFO__) {
     const info = __PSZY_INFO__[node.querySelector('.spanclass.uiicon').attributes.spn.value]
     if (info) {
@@ -359,8 +358,13 @@ async function updateWithCached(node) {
   return false
 }
 
-export async function updateStationInfo(node, {forceFetch = false} = {}) {
-  if(!forceFetch && updateWithCached(node)) return
+export async function fillAllStationInfoCached() {
+	const lis = getAllItems()
+  const {__PSZY_INFO__} = await chrome.storage.local.get("__PSZY_INFO__")
+  lis.forEach(node => updateWithCached(node, __PSZY_INFO__))
+}
+
+export async function updateStationInfo(node) {
   const stid = node.querySelector('.spanclass.uiicon').attributes.spn.value
   const fetchBody = { StationId: stid }
   return fetch("http://psd.bits-pilani.ac.in/Student/ViewActiveStationProblemBankData.aspx/getPBPOPUP", {
@@ -422,7 +426,7 @@ export async function updateStationInfo(node, {forceFetch = false} = {}) {
       return Promise.all([response1, response2])
     })
     .then(([response1, response2]) => Promise.all([response1.json(), response2.json()]))
-    .then(([data1, data2]) => {
+    .then(async ([data1, data2]) => {
       const parsed1 = JSON.parse(data1.d)
       const parsed2 = JSON.parse(data2.d)[0]
       const totStudents = parsed1?.map(p => p.TotalReqdStudents).reduce((acc, val) => acc + val) ?? '-'
@@ -451,11 +455,11 @@ function updateNodeInfoUI(node, {stipend, totStudents, totalProject, tags}) {
   node.querySelector('#__PSZY_DISCIPLINE__ span').innerText = tags
 }
 
-export function fillAllStationInfo(forceFetch = false) {
+export function fillAllStationInfo() {
   const allNodes = getAllItems()
   allNodes.forEach((n, i) => {
     setTimeout(() => {
-      viewProblemBank(n, { openInBackground: true, forceFetch }).then(() => {
+      viewProblemBank(n, { openInBackground: true }).then(() => {
         $('#__PSZY_FETCHINFOPROGRESS__').value = (i + 1) / allNodes.length
         $('#__PSZY_FETCHINFOPROGRESS__').title = `${i + 1}/${allNodes.length}: about ${Math.ceil((allNodes.length - i) * 2 / 60)} minutes remaining`
         if (i === allNodes.length - 1) {

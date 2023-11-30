@@ -2,7 +2,7 @@
 
 import globalControls from './templates/globalControls.html?raw'
 import itemControls from './templates/itemControls.html?raw'
-import { $, moveup, movedown, movetotop, movetobottom, moveswap, moveto, exportCsv, importCsv, selectRange, deselectRange, selectPattern, deselectPattern, deselectAll, moveselectedto, moveselectedtop, moveselectedbottom, handleStrayClick, viewProblemBank, fillAllStationInfo, getAllItems, updateSelectedCount } from './utils'
+import { $, moveup, movedown, movetotop, movetobottom, moveswap, moveto, exportCsv, importCsv, selectRange, deselectRange, selectPattern, deselectPattern, deselectAll, moveselectedto, moveselectedtop, moveselectedbottom, handleStrayClick, viewProblemBank, fillAllStationInfo, getAllItems, updateSelectedCount, fillAllStationInfoCached } from './utils'
 
 function checks() {
 	if (!['psd.bits-pilani.ac.in', 'localhost', '127.0.0.1'].includes(location.hostname)) {
@@ -51,6 +51,8 @@ if (checks()) {
 	document.addEventListener('click', checkPSZYClicks, false)
 	
 	checkForNewStations()
+
+	fillAllStationInfoCached()
 
 	function checkPSZYClicks(e) {
 		switch (e.target.id) {
@@ -158,7 +160,7 @@ async function checkForNewStations() {
 				Array.from(lis).find(li => li.querySelector(".spanclass.uiicon").getAttribute("spn")== station)?.classList.add("selected")
 			})
 			updateSelectedCount()
-			alert(`Found and selected${newStations.length} new station${newStations.length > 1 ? 's' : ''}`)
+			alert(`Found and selected ${newStations.length} new station${newStations.length > 1 ? 's' : ''}`)
 		}
 	}
 	chrome.storage.local.set({ __PSZY_STATIONS__: currentStations })
