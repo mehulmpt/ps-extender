@@ -1,0 +1,34 @@
+name: Create Archive
+on:
+  push:
+    branches:
+      - "master"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@firefox
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: "npm"
+
+      - name: install dependencies
+        run: npm ci
+
+      - name: build extension
+        run: npm run build
+
+      - name: generate archive
+        run: (cd dist && zip -r ../PSExtender.zip .)
+
+      - name: create release
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: latest_firefox
+          prerelease: true
+          title: Development Build
+          files: |
+            PSExtender.zip
