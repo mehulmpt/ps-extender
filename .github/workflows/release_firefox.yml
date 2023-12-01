@@ -2,14 +2,12 @@ name: Create Archive
 on:
   push:
     branches:
-      - "firefox"
+      - "master"
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          ref: firefox
 
       - uses: actions/setup-node@v3
         with:
@@ -20,7 +18,7 @@ jobs:
         run: npm ci
 
       - name: build extension
-        run: npm run build
+        run: npm run build:firefox
 
       - name: generate archive
         run: (cd dist && zip -r ../PSExtender.zip .)
