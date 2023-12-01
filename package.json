@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc && vite build",
+    "build:chrome": "tsc && vite build --mode chrome",
+    "build:firefox": "tsc && vite build --mode firefox",
     "build:watch": "tsc && vite build --watch",
     "dev": "vite",
     "start:firefox": "web-ext run --source-dir ./dist_firefox/"
