@@ -1,6 +1,6 @@
 import { resolve } from 'node:path'
 import { defineConfig } from 'vite'
-import { cpSync, rmdirSync } from 'node:fs'
+import { cpSync, rmdirSync, existsSync, mkdirSync } from 'node:fs'
 
 // export default defineConfig({
 //   build: {
@@ -15,6 +15,9 @@ import { cpSync, rmdirSync } from 'node:fs'
 
 export default defineConfig(({ mode }) => {
   const specificDir = mode === 'chrome' ? "public/chrome" : "public/firefox"
+  // create dist folder if not exists
+  if (!existsSync(resolve(__dirname, 'dist')))
+    mkdirSync(resolve(__dirname, 'dist'))
   rmdirSync(resolve(__dirname, 'dist'), { recursive: true })
   cpSync(resolve(__dirname, specificDir, 'manifest.json'), resolve(__dirname, 'dist', 'manifest.json'), { recursive: true })
   return {
