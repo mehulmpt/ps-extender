@@ -1,6 +1,6 @@
 <div align="center">
     <a href="http://psd.bits-pilani.ac.in/">
-        <img src="./public/icon.png" alt="BITS Pilani" width="120" height="120" />
+        <img src="./public/shared/icon.png" alt="BITS Pilani" width="120" height="120" />
     </a>
     <br /><br />
     <h1><code>PSD Extender</code></h1>
@@ -23,15 +23,20 @@
 
 👉 Add notes
 
+👉 Alert new stations added since last visit
+
 👉 Removes the default jQuery implementation on the website
 
 ![Screenshot of the preference page with this extension enabled](.github/images/screenshot.png)
 
 ## 🎓 Usage
 
-The easiest way to use this is to install is using webstore [here](http://bit.ly/ps-extender). For some reason, if you want to set it up manually:
+~~The easiest way to use this is to install is using webstore [here](http://bit.ly/ps-extender). For some reason, if you want to set it up manually:~~
+This extension is not available on the Chrome Web Store presently. You can install it manually by following the steps below:
 
-1. Download the latest version of `PSExtender.zip` from [Releases](https://github.com/mehulmpt/ps-extender/releases)
+### Installing in Chrome
+
+1. Download the latest version of `PSExtender.zip` from Releases -> [latest_chrome](https://github.com/Akshat-Oke/ps-extender/tags)
 1. Unzip this folder
 1. Type [`chrome://extensions/`](chrome://extensions/) in your URL
 1. Enable Developer Mode (top-right)
@@ -39,6 +44,14 @@ The easiest way to use this is to install is using webstore [here](http://bit.ly
 1. Locate the extracted folder
 1. Visit/Refresh your PSD page and click on the extension icon in your toolbar
 1. You should now see an interface with the controls
+
+### [Installing in Firefox](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Your_first_WebExtension#installing)
+
+1. Download the latest version from Releases -> [latest_firefox](https://github.com/Akshat-Oke/ps-extender/tags)
+2. Enter the URL `about:debugging` in the address bar and click the `This Firefox` option to the left.
+3. Click the `Load Temporary Add-on` button, then select any file in your extension's directory.
+
+The extension now installs, and remains installed until you restart Firefox.
 
 ## Setup
 
@@ -48,6 +61,9 @@ The easiest way to use this is to install is using webstore [here](http://bit.ly
 - run `npm run build` to build once. refresh browser and rerun extension.
 - run `npm run build:watch` to watch for changes and build automatically. refresh and rerun.
 - run `npm run dev` to test the extension on a local copy of the page (no need to install the extension). Auto-reloads
+- run `npm run build:chrome` to build for chrome (in `dist` folder)
+- run `npm run build:firefox` to build for firefox (in `dist` folder)
+- run `npm run start:firefox` to build and run the extension in firefox (using `web-ext`)
 
 ## 🚀 Contributing
 

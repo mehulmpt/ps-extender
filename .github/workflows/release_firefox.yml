@@ -7,7 +7,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2
 
       - uses: actions/setup-node@v3
         with:
@@ -18,7 +18,7 @@ jobs:
         run: npm ci
 
       - name: build extension
-        run: npm run build:chrome
+        run: npm run build:firefox
 
       - name: generate archive
         run: (cd dist && zip -r ../PSExtender.zip .)
@@ -27,8 +27,8 @@ jobs:
         uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          automatic_release_tag: latest_chrome
+          automatic_release_tag: latest_firefox
           prerelease: true
-          title: Development Build For Chrome
+          title: Development Build For Firefox
           files: |
             PSExtender.zip

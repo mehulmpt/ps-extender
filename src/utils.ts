@@ -18,6 +18,7 @@ export function getSelected() {
   return $('#sortable_nav').querySelectorAll('li.selected')
 }
 
+/// Get all station li nodes
 export function getAllItems() {
   return Array.from(document.querySelectorAll('#sortable_nav > li'))
 }
@@ -66,13 +67,42 @@ export function moveSelected(selection, to, { preserveSelection = false, recalcu
   glow(...selection)
   if (!preserveSelection) deselectAll()
 }
-
-export function selectNode(node) {
-  // ignore clicks on any interactive element
-  if (node.matches('input, a, button')) return
-  // else (de)select the item
+function toggleNodeSelection(node) {
   node.closest('#sortable_nav > li')?.classList.toggle('selected')
   updateSelectedCount()
+}
+function saveEditedNote() {
+  const lis = getAllItems()
+  lis.forEach(li => {
+    if(li.getAttribute("note-editing") == "true"){
+      const spn = li.querySelector(".spanclass.uiicon").getAttribute("spn")
+      const note = li.querySelector("#__PSZY_NOTE__").innerText
+      chrome.storage.local.get(['__PSZY_NOTES__'], (result) => {
+        const notes = result.__PSZY_NOTES__
+        console.log(notes)
+        if (notes) {
+          const index = notes.findIndex(n => n.spn == spn)
+          if (index >= 0) {
+            notes[index].note = note
+          } else {
+            notes.push({ spn, note })
+          }
+          chrome.storage.local.set({ __PSZY_NOTES__: notes })
+        } else {
+          chrome.storage.local.set({ __PSZY_NOTES__: [{ spn, note }] })
+        }
+      })
+      li.removeAttribute("note-editing")
+    }
+  })
+}
+export function handleStrayClick(target : HTMLElement) {
+  // save the note if a note was being edited
+  saveEditedNote()
+  // ignore clicks on any interactive element
+  if (target.matches('input, a, button')) return
+  // else (de)select the item if the click was on a list item
+  toggleNodeSelection(target)
 }
 
 export function deselectAll() {
@@ -283,7 +313,7 @@ export function importCsv() {
   })
 }
 
-export function viewProblemBank(node, { openInBackground = false } = {}) {
+export function viewProblemBank(node, { openInBackground = false, forFetch = false } = {}) {
   let stid = node.querySelector('.spanclass.uiicon').attributes.spn.value
   let fetchBody = { StationId: stid }
   return fetch("http://psd.bits-pilani.ac.in/Student/ViewActiveStationProblemBankData.aspx/getPBPOPUP", {
@@ -316,7 +346,25 @@ export function viewProblemBank(node, { openInBackground = false } = {}) {
   })
 }
 
-export function updateStationInfo(node) {
+function updateWithCached(node, __PSZY_INFO__) {
+  const stid = node.querySelector('.spanclass.uiicon').attributes.spn.value
+  if (__PSZY_INFO__) {
+    const info = __PSZY_INFO__[node.querySelector('.spanclass.uiicon').attributes.spn.value]
+    if (info) {
+      updateNodeInfoUI(node, info)
+      return true
+    }
+  }
+  return false
+}
+
+export async function fillAllStationInfoCached() {
+	const lis = getAllItems()
+  const {__PSZY_INFO__} = await chrome.storage.local.get("__PSZY_INFO__")
+  lis.forEach(node => updateWithCached(node, __PSZY_INFO__))
+}
+
+export async function updateStationInfo(node) {
   const stid = node.querySelector('.spanclass.uiicon').attributes.spn.value
   const fetchBody = { StationId: stid }
   return fetch("http://psd.bits-pilani.ac.in/Student/ViewActiveStationProblemBankData.aspx/getPBPOPUP", {
@@ -378,16 +426,33 @@ export function updateStationInfo(node) {
       return Promise.all([response1, response2])
     })
     .then(([response1, response2]) => Promise.all([response1.json(), response2.json()]))
-    .then(([data1, data2]) => {
+    .then(async ([data1, data2]) => {
       const parsed1 = JSON.parse(data1.d)
       const parsed2 = JSON.parse(data2.d)[0]
       const totStudents = parsed1?.map(p => p.TotalReqdStudents).reduce((acc, val) => acc + val) ?? '-'
       const tags = parsed1?.map(p => p.Tags.replaceAll(' ', '').replaceAll('-', '').replaceAll('Any', '')).join(',')
-      node.querySelector('#__PSZY_STIPEND__ span').innerText = parsed2?.Stipend ?? '-'
-      node.querySelector('#__PSZY_STUDENTS__ span').innerText = totStudents
-      node.querySelector('#__PSZY_PROJECTS__ span').innerText = parsed1?.[0].TotalProject ?? '-'
-      node.querySelector('#__PSZY_DISCIPLINE__ span').innerText = Array.from(new Set(tags.split(','))).filter(x => !!x).join(',') || 'Any'
-    })
+      const info = {
+        stipend: parsed2?.Stipend ?? '-',
+        totStudents,
+        totalProject: parsed1?.[0].TotalProject ?? '-',
+        tags
+      }
+      updateNodeInfoUI(node, info)
+      const {__PSZY_INFO__} = await chrome.storage.local.get("__PSZY_INFO__")
+      if (__PSZY_INFO__) {
+        __PSZY_INFO__[stid] = info
+        chrome.storage.local.set({ __PSZY_INFO__ })
+      } else {
+        chrome.storage.local.set({ __PSZY_INFO__: { [stid]: info } })
+      }
+  })
+}
+
+function updateNodeInfoUI(node, {stipend, totStudents, totalProject, tags}) {
+  node.querySelector('#__PSZY_STIPEND__ span').innerText = stipend ?? '-'
+  node.querySelector('#__PSZY_STUDENTS__ span').innerText = totStudents
+  node.querySelector('#__PSZY_PROJECTS__ span').innerText = totalProject ?? '-'
+  node.querySelector('#__PSZY_DISCIPLINE__ span').innerText = tags
 }
 
 export function fillAllStationInfo() {
